@@ -5,6 +5,7 @@ import { profile } from "@/data/profile";
 import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/context/LanguageContext";
+import { smoothScrollToSection } from "@/utils/scroll";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,7 +25,7 @@ export default function Navbar() {
       e.preventDefault();
       const lenis = (window as any).lenis;
       if (lenis && typeof lenis.scrollTo === "function") {
-        lenis.scrollTo(0, { duration: 1.2 });
+        lenis.scrollTo(0, { duration: 1.1 });
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -37,17 +38,7 @@ export default function Navbar() {
       e.preventDefault();
       const targetElement = document.querySelector(href);
       if (targetElement) {
-        const lenis = (window as any).lenis;
-        if (lenis && typeof lenis.scrollTo === "function") {
-          lenis.scrollTo(targetElement, { offset: -70, duration: 1.2 });
-        } else {
-          const navOffset = 70;
-          const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo({
-            top: elementPosition - navOffset,
-            behavior: "smooth",
-          });
-        }
+        smoothScrollToSection(targetElement, 1.1);
         history.pushState(null, "", href);
       }
       setIsMobileMenuOpen(false);

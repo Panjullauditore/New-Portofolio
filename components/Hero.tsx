@@ -3,6 +3,7 @@
 import { profile } from "@/data/profile";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { smoothScrollToSection } from "@/utils/scroll";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -23,17 +24,7 @@ export default function Hero() {
     e.preventDefault();
     const targetElement = document.querySelector(href);
     if (targetElement) {
-      const lenis = (window as any).lenis;
-      if (lenis && typeof lenis.scrollTo === "function") {
-        lenis.scrollTo(targetElement, { offset: -70, duration: 1.2 });
-      } else {
-        const navOffset = 70;
-        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({
-          top: elementPosition - navOffset,
-          behavior: "smooth",
-        });
-      }
+      smoothScrollToSection(targetElement, 1.1);
       history.pushState(null, "", href);
     }
   };

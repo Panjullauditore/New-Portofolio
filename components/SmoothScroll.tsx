@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { smoothScrollToSection } from "@/utils/scroll";
 
 export default function SmoothScroll() {
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function SmoothScroll() {
     // Expose lenis globally
     (window as any).lenis = lenis;
 
-    // Handle internal anchor links (#about, #projects, etc.) smoothly with Lenis
+    // Handle internal anchor links (#about, #projects, etc.) smoothly with exact section positioning
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest("a");
@@ -34,10 +35,7 @@ export default function SmoothScroll() {
             const targetElement = document.querySelector(href);
             if (targetElement) {
               e.preventDefault();
-              lenis.scrollTo(targetElement as HTMLElement, {
-                offset: -70,
-                duration: 1.2,
-              });
+              smoothScrollToSection(targetElement, 1.1);
               history.pushState(null, "", href);
             }
           } catch {
