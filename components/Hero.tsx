@@ -8,17 +8,54 @@ import { smoothScrollToSection } from "@/utils/scroll";
 export default function Hero() {
   const { t } = useLanguage();
   const [roleIndex, setRoleIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const roles = t.hero.roles;
 
   useEffect(() => {
     setIsVisible(true);
-    const interval = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % roles.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [roles.length]);
+  }, []);
+
+  // When language toggles, reset text to start typing the new translated role cleanly
+  useEffect(() => {
+    setDisplayText("");
+    setIsDeleting(false);
+  }, [roles]);
+
+  // Typewriter typing and deleting animation effect
+  useEffect(() => {
+    const currentRole = roles[roleIndex % roles.length] || "";
+    let timer: NodeJS.Timeout;
+
+    if (!isDeleting) {
+      // Typing forward letter by letter
+      if (displayText.length < currentRole.length) {
+        timer = setTimeout(() => {
+          setDisplayText(currentRole.slice(0, displayText.length + 1));
+        }, 90);
+      } else {
+        // Pauses when word is fully typed
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 1800);
+      }
+    } else {
+      // Deleting backwards letter by letter
+      if (displayText.length > 0) {
+        timer = setTimeout(() => {
+          setDisplayText(currentRole.slice(0, displayText.length - 1));
+        }, 45);
+      } else {
+        // Word completely cleared, advance to next role
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % roles.length);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, roleIndex, roles]);
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -32,7 +69,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex items-center relative overflow-hidden pt-20"
+      className="min-h-screen flex items-center relative overflow-hidden pt-20 pb-12"
     >
       {/* Background Decorations */}
       <div className="absolute inset-0 pointer-events-none">
@@ -52,35 +89,33 @@ export default function Hero() {
           }`}
         >
           {/* Greeting Badge */}
-          <div className="inline-block mb-6">
-            <span className="badge-brutal bg-brutal-yellow text-brutal-black text-base px-4 py-2">
+          <div className="inline-block mb-3.5">
+            <span className="badge-brutal bg-brutal-yellow text-brutal-black text-sm md:text-base px-3.5 py-1.5 shadow-[var(--brutal-shadow-sm)]">
               {t.hero.greeting}
             </span>
           </div>
 
           {/* Name */}
-          <h1 className="font-heading font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-brutal-black dark:text-brutal-white leading-[0.95] mb-4">
+          <h1 className="font-heading font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-brutal-black dark:text-brutal-white leading-[0.95] mb-3">
             {profile.name.split(" ")[0]}
             <br />
-            <span className="relative inline-block">
+            <span className="relative inline-block mt-1">
               {profile.name.split(" ").slice(1).join(" ")}
-              <div className="absolute -bottom-2 left-0 w-full h-3 bg-brutal-yellow -z-10" />
+              <div className="absolute -bottom-1.5 left-0 w-full h-3 bg-brutal-yellow -z-10" />
             </span>
           </h1>
 
-          {/* Animated Role */}
-          <div className="h-14 md:h-16 mb-8 overflow-hidden">
-            <p
-              key={`${roleIndex}-${t.hero.roles[roleIndex]}`}
-              className="font-mono text-xl md:text-2xl lg:text-3xl text-brutal-black dark:text-brutal-white animate-slide-up"
-            >
-              {">"} {roles[roleIndex % roles.length]}
-              <span className="inline-block w-3 h-6 bg-brutal-red ml-1 animate-pulse" />
+          {/* Typewriter Animated Role */}
+          <div className="min-h-[2.5rem] md:min-h-[3rem] flex items-center mb-4">
+            <p className="font-mono text-xl sm:text-2xl md:text-3xl text-brutal-black dark:text-brutal-white font-bold flex items-center tracking-tight">
+              <span className="text-brutal-black/70 dark:text-brutal-white/70 mr-2">{">"}</span>
+              <span>{displayText}</span>
+              <span className="inline-block w-2.5 sm:w-3 h-6 md:h-8 bg-brutal-red ml-1.5 align-middle animate-pulse" />
             </p>
           </div>
 
           {/* Description */}
-          <p className="font-body text-lg md:text-xl text-brutal-black/80 dark:text-brutal-white/70 max-w-2xl mb-10 leading-relaxed">
+          <p className="font-body text-base sm:text-lg md:text-xl text-brutal-black/80 dark:text-brutal-white/70 max-w-2xl mb-7 leading-relaxed">
             {t.hero.bio}
           </p>
 
@@ -89,7 +124,7 @@ export default function Hero() {
             <a
               href="#projects"
               onClick={(e) => handleScrollTo(e, "#projects")}
-              className="btn-brutal text-lg px-8 py-4 cursor-pointer"
+              className="btn-brutal text-base sm:text-lg px-7 py-3.5 cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -99,7 +134,7 @@ export default function Hero() {
             <a
               href={`/${profile.cvFileName}`}
               download
-              className="btn-brutal btn-brutal-secondary text-lg px-8 py-4"
+              className="btn-brutal btn-brutal-secondary text-base sm:text-lg px-7 py-3.5"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -112,10 +147,10 @@ export default function Hero() {
           <a
             href="#about"
             onClick={(e) => handleScrollTo(e, "#about")}
-            className="mt-16 inline-flex items-center gap-3 text-brutal-black/60 dark:text-brutal-white/40 hover:text-brutal-black dark:hover:text-brutal-white transition-colors cursor-pointer group"
+            className="mt-10 md:mt-12 inline-flex items-center gap-3 text-brutal-black/60 dark:text-brutal-white/40 hover:text-brutal-black dark:hover:text-brutal-white transition-colors cursor-pointer group"
           >
-            <div className="w-8 h-12 border-3 border-brutal-black/40 dark:border-brutal-white/30 group-hover:border-brutal-black dark:group-hover:border-brutal-white rounded-full flex items-start justify-center p-2 transition-colors">
-              <div className="w-1.5 h-3 bg-brutal-black/60 dark:bg-brutal-white/50 group-hover:bg-brutal-black dark:group-hover:bg-brutal-white rounded-full animate-bounce" />
+            <div className="w-7 h-11 border-3 border-brutal-black/40 dark:border-brutal-white/30 group-hover:border-brutal-black dark:group-hover:border-brutal-white rounded-full flex items-start justify-center p-1.5 transition-colors">
+              <div className="w-1.5 h-2.5 bg-brutal-black/60 dark:bg-brutal-white/50 group-hover:bg-brutal-black dark:group-hover:bg-brutal-white rounded-full animate-bounce" />
             </div>
             <span className="font-mono text-sm font-semibold">{t.hero.scrollDown}</span>
           </a>
