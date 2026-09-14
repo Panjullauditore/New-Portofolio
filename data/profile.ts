@@ -1,0 +1,25 @@
+export const profile = {
+  name: "Ahmad Fahrezi",
+  tagline: "Frontend Developer & Designer",
+  bio: "Passionate developer crafting pixel-perfect, accessible, and performant web experiences. I love turning complex problems into simple, beautiful solutions. Currently exploring the intersection of design and code.",
+  location: "Jakarta, Indonesia",
+  education: "S1 Informatika",
+  status: "Open to Work",
+  email: "ahmadfahrezir@gmail.com",
+  phone: "+62 812 3456 7890",
+  whatsapp: "6281234567890",
+  avatar: "/avatar.jpg",
+  socialLinks: {
+    github: "https://github.com/ahmadfahrezi",
+    linkedin: "https://linkedin.com/in/ahmadfahrezi",
+    twitter: "https://twitter.com/ahmadfahrezi",
+    instagram: "https://instagram.com/ahmadfahrezi",
+  },
+  facts: [
+    { label: "Lokasi", value: "Jakarta, ID", emoji: "📍" },
+    { label: "Pendidikan", value: "S1 Informatika", emoji: "🎓" },
+    { label: "Status", value: "Open to Work", emoji: "💼" },
+    { label: "Pengalaman", value: "3+ Tahun", emoji: "⚡" },
+  ],
+  cvFileName: "CV-Ahmad-Fahrezi-2026.pdf",
+};

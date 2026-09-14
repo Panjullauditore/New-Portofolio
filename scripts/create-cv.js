@@ -1,0 +1,140 @@
+const fs = require('fs');
+const path = require('path');
+
+// Simple valid PDF generator
+function createResumePDF() {
+  const content = `%PDF-1.4
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [3 0 R]
+  /Count 1
+>>
+endobj
+3 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 595.28 841.89]
+  /Contents 4 0 R
+  /Resources <<
+    /Font <<
+      /F1 5 0 R
+      /F2 6 0 R
+    >>
+  >>
+>>
+endobj
+4 0 obj
+<<
+  /Length 1200
+>>
+stream
+BT
+/F1 24 Tf
+50 780 Td
+(AHMAD FAHREZI) Tj
+/F2 14 Tf
+0 -24 Td
+(Frontend Developer & UI/UX Designer) Tj
+/F2 10 Tf
+0 -18 Td
+(Email: ahmadfahrezir@gmail.com | Portfolio: ahmadfahrezi.dev | GitHub: github.com/ahmadfahrezi) Tj
+
+/F1 14 Tf
+0 -36 Td
+(SUMMARY) Tj
+/F2 10 Tf
+0 -18 Td
+(Frontend Developer with 3+ years experience building bold, responsive web applications.) Tj
+0 -14 Td
+(Specializing in React, Next.js, TypeScript, and Neo Brutalism design systems.) Tj
+
+/F1 14 Tf
+0 -32 Td
+(EXPERIENCE) Tj
+/F1 11 Tf
+0 -18 Td
+(Senior Frontend Developer - Tech Studio Jakarta (2024 - Present)) Tj
+/F2 10 Tf
+0 -14 Td
+(- Leading a team of 4 developers building enterprise web apps and design systems.) Tj
+0 -14 Td
+(- Improved Core Web Vitals performance across client sites by 40%.) Tj
+
+/F1 11 Tf
+0 -22 Td
+(Frontend Developer - Digital Creative Agency (2022 - 2024)) Tj
+/F2 10 Tf
+0 -14 Td
+(- Developed 15+ responsive client websites using Next.js, Tailwind CSS, and Figma.) Tj
+0 -14 Td
+(- Integrated third-party APIs including Spotify, Stripe, and CMS headless.) Tj
+
+/F1 14 Tf
+0 -32 Td
+(SKILLS) Tj
+/F2 10 Tf
+0 -18 Td
+(- Languages: TypeScript, JavaScript, HTML5, CSS3, Python) Tj
+0 -14 Td
+(- Frameworks & Tools: Next.js, React, Tailwind CSS, Node.js, Git, Docker, Figma) Tj
+0 -14 Td
+(- Concepts: Neo Brutalism, Responsive Design, Web Performance, SEO, REST API) Tj
+
+/F1 14 Tf
+0 -32 Td
+(EDUCATION) Tj
+/F1 11 Tf
+0 -18 Td
+(Bachelor of Computer Science - Universitas Indonesia (2018 - 2022)) Tj
+/F2 10 Tf
+0 -14 Td
+(Graduated with Honors - GPA 3.82/4.00) Tj
+ET
+endstream
+endobj
+5 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica-Bold
+>>
+endobj
+6 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica
+>>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000266 00000 n 
+0000001518 00000 n 
+0000001594 00000 n 
+trailer
+<<
+  /Size 7
+  /Root 1 0 R
+>>
+startxref
+1665
+%%EOF`;
+
+  const targetPath = path.join(__dirname, '..', 'public', 'CV-Ahmad-Fahrezi-2026.pdf');
+  fs.writeFileSync(targetPath, content.trim());
+  console.log(`CV PDF created at ${targetPath}`);
+}
+
+createResumePDF();

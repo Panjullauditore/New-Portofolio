@@ -1,0 +1,325 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brutal-yellow: #FFE925;
+  --color-brutal-red: #FF5C5C;
+  --color-brutal-blue: #4D96FF;
+  --color-brutal-green: #6BCB77;
+  --color-brutal-pink: #FF6B9D;
+  --color-brutal-orange: #FF8C42;
+  --color-brutal-purple: #B388FF;
+  --color-brutal-black: #1A1A2E;
+  --color-brutal-white: #FAFAF9;
+  --color-brutal-cream: #FFF8E7;
+  --color-brutal-dark: #0D0D1A;
+  --color-brutal-dark-card: #16162A;
+  --color-brutal-dark-surface: #1E1E3A;
+
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --shadow-brutal: 4px 4px 0px 0px #1A1A2E;
+  --shadow-brutal-sm: 2px 2px 0px 0px #1A1A2E;
+  --shadow-brutal-lg: 6px 6px 0px 0px #1A1A2E;
+  --shadow-brutal-xl: 8px 8px 0px 0px #1A1A2E;
+
+  --animate-slide-up: slideUp 0.6s ease-out forwards;
+  --animate-fade-in: fadeIn 0.6s ease-out forwards;
+  --animate-scale-in: scaleIn 0.4s ease-out forwards;
+  --animate-marquee: marquee 20s linear infinite;
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+  --animate-slide-down: slideDown 0.3s ease-out forwards;
+}
+
+/* ===== DARK MODE SHADOW OVERRIDES ===== */
+:root {
+  --brutal-border: #1A1A2E;
+  --brutal-shadow: 4px 4px 0px 0px #1A1A2E;
+  --brutal-shadow-sm: 2px 2px 0px 0px #1A1A2E;
+  --brutal-shadow-lg: 6px 6px 0px 0px #1A1A2E;
+}
+
+.dark {
+  --brutal-border: #FAFAF9;
+  --brutal-shadow: 4px 4px 0px 0px #FAFAF9;
+  --brutal-shadow-sm: 2px 2px 0px 0px #FAFAF9;
+  --brutal-shadow-lg: 6px 6px 0px 0px #FAFAF9;
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  0% { transform: translateY(-10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pressDown {
+  0% { transform: translate(0, 0); box-shadow: var(--brutal-shadow); }
+  100% { transform: translate(4px, 4px); box-shadow: 0px 0px 0px 0px transparent; }
+}
+
+/* ===== BASE STYLES ===== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 5rem;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-brutal-cream);
+  color: var(--color-brutal-black);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background-color: var(--color-brutal-dark);
+  color: var(--color-brutal-white);
+}
+
+::selection {
+  background-color: var(--color-brutal-yellow);
+  color: var(--color-brutal-black);
+}
+
+/* ===== BRUTALIST BUTTON ===== */
+.btn-brutal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  border: 3px solid var(--brutal-border);
+  background-color: var(--color-brutal-yellow);
+  color: var(--color-brutal-black);
+  box-shadow: var(--brutal-shadow);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.btn-brutal:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--brutal-border);
+}
+
+.btn-brutal:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.btn-brutal-secondary {
+  background-color: var(--color-brutal-white);
+}
+
+.dark .btn-brutal-secondary {
+  background-color: var(--color-brutal-dark-surface);
+  color: var(--color-brutal-white);
+}
+
+.btn-brutal-red {
+  background-color: var(--color-brutal-red);
+  color: white;
+}
+
+.btn-brutal-blue {
+  background-color: var(--color-brutal-blue);
+  color: white;
+}
+
+.btn-brutal-green {
+  background-color: var(--color-brutal-green);
+}
+
+.btn-brutal-pink {
+  background-color: var(--color-brutal-pink);
+  color: white;
+}
+
+/* ===== BRUTALIST CARD ===== */
+.card-brutal {
+  border: 3px solid var(--brutal-border);
+  background-color: var(--color-brutal-white);
+  color: var(--color-brutal-black);
+  box-shadow: var(--brutal-shadow);
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.dark .card-brutal {
+  background-color: var(--color-brutal-dark-card);
+  color: var(--color-brutal-white);
+}
+
+.card-brutal:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px var(--brutal-border);
+}
+
+.card-brutal-static {
+  border: 3px solid var(--brutal-border);
+  background-color: var(--color-brutal-white);
+  color: var(--color-brutal-black);
+  box-shadow: var(--brutal-shadow);
+}
+
+.dark .card-brutal-static {
+  background-color: var(--color-brutal-dark-card);
+  color: var(--color-brutal-white);
+}
+
+/* ===== BRUTALIST BADGE ===== */
+.badge-brutal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 2px solid var(--brutal-border);
+  box-shadow: var(--brutal-shadow-sm);
+  transition: all 0.1s ease;
+}
+
+.badge-brutal:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px var(--brutal-border);
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2.5rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--brutal-border);
+}
+
+/* ===== MARQUEE ===== */
+.marquee-track {
+  display: flex;
+  animation: marquee 20s linear infinite;
+  width: max-content;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brutal-cream);
+  border-left: 3px solid var(--brutal-border);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-brutal-dark);
+  border-left-color: var(--color-brutal-dark-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brutal-black);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-brutal-white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+/* ===== INTERSECTION OBSERVER ANIMATIONS ===== */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.animate-on-scroll.visible {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+}
