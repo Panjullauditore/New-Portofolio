@@ -20,23 +20,34 @@ export default function SmoothScroll() {
       touchMultiplier: 1.5,
     });
 
+    // Expose lenis globally
+    (window as any).lenis = lenis;
+
     // Handle internal anchor links (#about, #projects, etc.) smoothly with Lenis
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest("a");
-      if (anchor && anchor.hash && anchor.origin === window.location.origin) {
-        const targetElement = document.querySelector(anchor.hash);
-        if (targetElement) {
-          e.preventDefault();
-          lenis.scrollTo(targetElement as HTMLElement, {
-            offset: -80,
-            duration: 1.4,
-          });
+      if (anchor) {
+        const href = anchor.getAttribute("href");
+        if (href && href.startsWith("#") && href.length > 1) {
+          try {
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+              e.preventDefault();
+              lenis.scrollTo(targetElement as HTMLElement, {
+                offset: -70,
+                duration: 1.2,
+              });
+              history.pushState(null, "", href);
+            }
+          } catch {
+            // ignore
+          }
         }
       }
     };
 
-    document.addEventListener("click", handleAnchorClick);
+    document.addEventListener("click", handleAnchorClick, true);
 
     function raf(time: number) {
       lenis.raf(time);
@@ -46,7 +57,8 @@ export default function SmoothScroll() {
     const rafId = requestAnimationFrame(raf);
 
     return () => {
-      document.removeEventListener("click", handleAnchorClick);
+      delete (window as any).lenis;
+      document.removeEventListener("click", handleAnchorClick, true);
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };

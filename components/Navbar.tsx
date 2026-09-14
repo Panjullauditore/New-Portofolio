@@ -19,6 +19,41 @@ export default function Navbar() {
     { label: t.navbar.contact, href: "#contact" },
   ];
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href === "#") {
+      e.preventDefault();
+      const lenis = (window as any).lenis;
+      if (lenis && typeof lenis.scrollTo === "function") {
+        lenis.scrollTo(0, { duration: 1.2 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      history.pushState(null, "", window.location.pathname);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const targetElement = document.querySelector(href);
+      if (targetElement) {
+        const lenis = (window as any).lenis;
+        if (lenis && typeof lenis.scrollTo === "function") {
+          lenis.scrollTo(targetElement, { offset: -70, duration: 1.2 });
+        } else {
+          const navOffset = 70;
+          const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: elementPosition - navOffset,
+            behavior: "smooth",
+          });
+        }
+        history.pushState(null, "", href);
+      }
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -40,7 +75,8 @@ export default function Navbar() {
           {/* Logo */}
           <a
             href="#"
-            className="font-heading font-bold text-xl md:text-2xl text-brutal-black dark:text-brutal-white hover:text-brutal-red transition-colors"
+            onClick={(e) => handleNavClick(e, "#")}
+            className="font-heading font-bold text-xl md:text-2xl text-brutal-black dark:text-brutal-white hover:text-brutal-red transition-colors cursor-pointer"
           >
             {"{"} Fahrezi {"}"}
           </a>
@@ -51,7 +87,8 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 font-heading font-semibold text-sm text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-2 border-transparent hover:border-brutal-black dark:hover:border-brutal-white transition-all"
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="px-3 py-2 font-heading font-semibold text-sm text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-2 border-transparent hover:border-brutal-black dark:hover:border-brutal-white transition-all cursor-pointer"
               >
                 {link.label}
               </a>
@@ -116,8 +153,8 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-3 font-heading font-semibold text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-b-2 border-brutal-black dark:border-brutal-white/30 last:border-b-0 transition-colors"
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="block px-4 py-3 font-heading font-semibold text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-b-2 border-brutal-black dark:border-brutal-white/30 last:border-b-0 transition-colors cursor-pointer"
               >
                 {link.label}
               </a>

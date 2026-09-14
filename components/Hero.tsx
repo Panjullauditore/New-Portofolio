@@ -19,6 +19,25 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [roles.length]);
 
+  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetElement = document.querySelector(href);
+    if (targetElement) {
+      const lenis = (window as any).lenis;
+      if (lenis && typeof lenis.scrollTo === "function") {
+        lenis.scrollTo(targetElement, { offset: -70, duration: 1.2 });
+      } else {
+        const navOffset = 70;
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: elementPosition - navOffset,
+          behavior: "smooth",
+        });
+      }
+      history.pushState(null, "", href);
+    }
+  };
+
   return (
     <section
       id="hero"
@@ -76,7 +95,11 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4">
-            <a href="#projects" className="btn-brutal text-lg px-8 py-4">
+            <a
+              href="#projects"
+              onClick={(e) => handleScrollTo(e, "#projects")}
+              className="btn-brutal text-lg px-8 py-4 cursor-pointer"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
@@ -95,12 +118,16 @@ export default function Hero() {
           </div>
 
           {/* Scroll indicator */}
-          <div className="mt-16 flex items-center gap-3 text-brutal-black/60 dark:text-brutal-white/40">
-            <div className="w-8 h-12 border-3 border-brutal-black/40 dark:border-brutal-white/30 rounded-full flex items-start justify-center p-2">
-              <div className="w-1.5 h-3 bg-brutal-black/60 dark:bg-brutal-white/50 rounded-full animate-bounce" />
+          <a
+            href="#about"
+            onClick={(e) => handleScrollTo(e, "#about")}
+            className="mt-16 inline-flex items-center gap-3 text-brutal-black/60 dark:text-brutal-white/40 hover:text-brutal-black dark:hover:text-brutal-white transition-colors cursor-pointer group"
+          >
+            <div className="w-8 h-12 border-3 border-brutal-black/40 dark:border-brutal-white/30 group-hover:border-brutal-black dark:group-hover:border-brutal-white rounded-full flex items-start justify-center p-2 transition-colors">
+              <div className="w-1.5 h-3 bg-brutal-black/60 dark:bg-brutal-white/50 group-hover:bg-brutal-black dark:group-hover:bg-brutal-white rounded-full animate-bounce" />
             </div>
-            <span className="font-mono text-sm">{t.hero.scrollDown}</span>
-          </div>
+            <span className="font-mono text-sm font-semibold">{t.hero.scrollDown}</span>
+          </a>
         </div>
       </div>
     </section>
