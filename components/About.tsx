@@ -48,16 +48,16 @@ export default function About() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
             {/* Avatar */}
-            <div className="lg:col-span-4 flex justify-center lg:justify-start">
-              <div className="relative">
+            <div className="lg:col-span-4 flex justify-center lg:justify-start items-start self-start">
+              <div className="relative inline-block w-fit">
                 <div className="w-64 h-72 md:w-72 md:h-80 border-4 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[var(--brutal-shadow-lg)] overflow-hidden">
                   <div className="w-full h-full bg-brutal-blue/20 flex items-center justify-center">
                     <span className="text-8xl">👨‍💻</span>
                   </div>
                 </div>
-                {/* Decorative sticker */}
-                <div className="absolute -bottom-4 -right-4 bg-brutal-red border-3 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] px-4 py-2 rotate-3">
-                  <span className="font-heading font-bold text-white text-sm">
+                {/* Decorative sticker - tightly anchored to avatar corner */}
+                <div className="absolute -bottom-3 -right-3 z-10 bg-brutal-red border-3 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] px-3.5 py-1.5 rotate-3 whitespace-nowrap">
+                  <span className="font-heading font-bold text-white text-sm tracking-wide">
                     {t.about.facts.status.value}
                   </span>
                 </div>
