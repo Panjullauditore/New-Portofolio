@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { profile } from "@/data/profile";
 
 export default function About() {
   const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,10 +52,19 @@ export default function About() {
             {/* Avatar */}
             <div className="lg:col-span-4 flex justify-center lg:justify-start items-start self-start">
               <div className="relative inline-block w-fit">
-                <div className="w-64 h-72 md:w-72 md:h-80 border-4 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[var(--brutal-shadow-lg)] overflow-hidden">
-                  <div className="w-full h-full bg-brutal-blue/20 flex items-center justify-center">
-                    <span className="text-8xl">👨‍💻</span>
-                  </div>
+                <div className="w-64 h-72 md:w-72 md:h-80 border-4 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[var(--brutal-shadow-lg)] overflow-hidden relative group">
+                  {profile.avatar && !imgError ? (
+                    <img
+                      src={profile.avatar}
+                      alt={profile.name}
+                      onError={() => setImgError(true)}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-brutal-blue/20 flex items-center justify-center">
+                      <span className="text-8xl">👨‍💻</span>
+                    </div>
+                  )}
                 </div>
                 {/* Decorative sticker - tightly anchored to avatar corner */}
                 <div className="absolute -bottom-3 -right-3 z-10 bg-brutal-red border-3 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] px-3.5 py-1.5 rotate-3 whitespace-nowrap">

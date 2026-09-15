@@ -8,6 +8,11 @@ export const profile = {
   email: "ahmadfahrezir@gmail.com",
   phone: "+62 812 3456 7890",
   whatsapp: "6281234567890",
+  /**
+   * Foto profil untuk bagian About Me.
+   * Cukup simpan file foto Anda di folder /public/ (misal: public/avatar.jpg atau public/images/foto-saya.jpg)
+   * lalu masukkan path-nya di bawah ini. Jika file belum ada, otomatis menggunakan ilustrasi/emoji 👨‍💻.
+   */
   avatar: "/avatar.jpg",
   socialLinks: {
     github: "https://github.com/ahmadfahrezi",
