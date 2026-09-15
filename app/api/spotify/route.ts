@@ -81,6 +81,8 @@ async function getLastFmTrack() {
       albumArt,
       url: trackUrl,
       isPlaying,
+      duration: 215000,
+      progress: isPlaying ? 35000 : 0,
     };
   } catch {
     return null;

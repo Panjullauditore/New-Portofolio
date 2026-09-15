@@ -30,6 +30,9 @@ export default function SpotifyWidget() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  const [currentProgress, setCurrentProgress] = useState<number>(0);
+  const [currentDuration, setCurrentDuration] = useState<number>(215000);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -77,6 +80,46 @@ export default function SpotifyWidget() {
 
   const displayTrack = track || (error || !isLoading ? mockTrack : null);
   const isPlaying = displayTrack?.isPlaying || false;
+
+  useEffect(() => {
+    if (displayTrack) {
+      const dur = displayTrack.duration || 215000;
+      const prog =
+        displayTrack.progress !== undefined && displayTrack.progress > 0
+          ? displayTrack.progress
+          : displayTrack.isPlaying
+          ? 35000
+          : 85000;
+      setCurrentDuration(dur);
+      setCurrentProgress(prog);
+    }
+  }, [
+    displayTrack?.name,
+    displayTrack?.progress,
+    displayTrack?.duration,
+    displayTrack?.isPlaying,
+  ]);
+
+  // Real-time second-by-second ticker when playing
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const timer = setInterval(() => {
+      setCurrentProgress((prev) => {
+        if (currentDuration > 0 && prev >= currentDuration) {
+          return 0;
+        }
+        return prev + 1000;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isPlaying, currentDuration]);
+
+  const progressPercent =
+    currentDuration > 0
+      ? Math.min(100, Math.max(0, (currentProgress / currentDuration) * 100))
+      : 0;
 
   return (
     <section ref={sectionRef} className="pt-2 pb-10 md:pb-14">
@@ -217,49 +260,22 @@ export default function SpotifyWidget() {
                       </div>
 
                       {/* Progress Bar & Timing */}
-                      <div className="mt-4 pt-2 border-t-2 border-dashed border-brutal-black/15 dark:border-brutal-white/15">
-                        <div className="flex items-center justify-between font-mono text-[11px] font-semibold text-brutal-black/60 dark:text-brutal-white/50 mb-1.5">
-                          <span>{formatTime(displayTrack.progress)}</span>
-                          <span className="text-[10px] uppercase text-brutal-black/40 dark:text-brutal-white/40">
-                            {displayTrack.progress && displayTrack.duration
-                              ? `${Math.round((displayTrack.progress / displayTrack.duration) * 100)}%`
-                              : "LIVE"}
+                      <div className="mt-4 pt-3 border-t-2 border-dashed border-brutal-black/15 dark:border-brutal-white/15">
+                        <div className="flex items-center justify-between font-mono text-xs font-bold text-brutal-black/70 dark:text-brutal-white/60 mb-1.5">
+                          <span>{formatTime(currentProgress)}</span>
+                          <span className="text-[10px] tracking-wider uppercase text-[#1DB954] bg-[#1DB954]/10 px-1.5 py-0.5 border border-[#1DB954]/30">
+                            {currentDuration > 0 ? `${Math.round(progressPercent)}%` : "LIVE"}
                           </span>
-                          <span>{formatTime(displayTrack.duration)}</span>
+                          <span>{formatTime(currentDuration)}</span>
                         </div>
-                        <div className="w-full h-2 bg-brutal-black/15 dark:bg-brutal-white/10 border border-brutal-black/30 dark:border-brutal-white/20 overflow-hidden">
+                        <div className="w-full h-2.5 bg-brutal-black/15 dark:bg-brutal-white/10 border-2 border-brutal-black/30 dark:border-brutal-white/20 overflow-hidden">
                           <div
-                            className="h-full bg-[#1DB954] transition-all duration-1000 relative"
+                            className="h-full bg-[#1DB954] transition-all duration-1000 ease-linear"
                             style={{
-                              width: `${
-                                displayTrack.progress && displayTrack.duration
-                                  ? Math.min(
-                                      100,
-                                      (displayTrack.progress / displayTrack.duration) * 100
-                                    )
-                                  : isPlaying
-                                  ? 55
-                                  : 0
-                              }%`,
+                              width: `${progressPercent}%`,
                             }}
                           />
                         </div>
-                      </div>
-
-                      {/* Bottom Controls / Action Banner */}
-                      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                        <span className="font-mono text-xs text-brutal-black/65 dark:text-brutal-white/60 italic text-center sm:text-left">
-                          {t.spotify.subtitle || "The soundtrack fueling my daily coding sessions"}
-                        </span>
-                        <a
-                          href={displayTrack.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-[#1DB954] hover:bg-[#1ed760] text-black font-mono font-bold text-xs uppercase px-3.5 py-1.5 border-2 border-brutal-black shadow-[var(--brutal-shadow-sm)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all cursor-pointer whitespace-nowrap"
-                        >
-                          <span>{t.spotify.listenOnSpotify || "Listen on Spotify"}</span>
-                          <span>↗</span>
-                        </a>
                       </div>
                     </div>
                   </div>
