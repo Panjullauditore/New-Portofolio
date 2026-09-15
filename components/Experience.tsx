@@ -45,7 +45,7 @@ export default function Experience() {
   }, [selectedProof]);
 
   return (
-    <section id="experience" ref={sectionRef} className="py-20 md:py-28 bg-brutal-cream/60 dark:bg-brutal-dark">
+    <section id="experience" ref={sectionRef} className="pt-20 md:pt-28 pb-8 md:pb-12 bg-brutal-cream/60 dark:bg-brutal-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${

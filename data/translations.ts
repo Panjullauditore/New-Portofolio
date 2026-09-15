@@ -122,6 +122,8 @@ export interface TranslationDictionary {
     recentlyPlayed: string;
     onSpotify: string;
     offline: string;
+    subtitle?: string;
+    listenOnSpotify?: string;
   };
   contact: {
     badge: string;
@@ -450,6 +452,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       recentlyPlayed: "Recently Played",
       onSpotify: "on Spotify",
       offline: "Offline / Not Playing",
+      subtitle: "The soundtrack fueling my coding flow & late-night builds",
+      listenOnSpotify: "Listen on Spotify",
     },
     contact: {
       badge: "05 Contact Me",
@@ -776,9 +780,11 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     spotify: {
       nowPlaying: "Sedang Diputar",
-      recentlyPlayed: "Terakhir Diputar",
+      recentlyPlayed: "Baru Saja Diputar",
       onSpotify: "di Spotify",
-      offline: "Sedang tidak memutar musik",
+      offline: "Offline / Tidak Memutar Musik",
+      subtitle: "Musik yang menemani saat ngoding & eksplorasi ide",
+      listenOnSpotify: "Dengarkan di Spotify",
     },
     contact: {
       badge: "05 Hubungi Saya",
