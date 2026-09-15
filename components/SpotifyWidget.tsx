@@ -10,16 +10,6 @@ interface SpotifyTrack {
   albumArt: string;
   url: string;
   isPlaying: boolean;
-  progress?: number;
-  duration?: number;
-}
-
-function formatTime(ms?: number) {
-  if (!ms || ms <= 0) return "0:00";
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 }
 
 export default function SpotifyWidget() {
@@ -29,9 +19,6 @@ export default function SpotifyWidget() {
   const [error, setError] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-
-  const [currentProgress, setCurrentProgress] = useState<number>(0);
-  const [currentDuration, setCurrentDuration] = useState<number>(215000);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -66,7 +53,7 @@ export default function SpotifyWidget() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fallback mock data when API is not configured or offline
+  // Fallback mock data when API is offline
   const mockTrack: SpotifyTrack = {
     name: "Blinding Lights",
     artist: "The Weeknd",
@@ -74,52 +61,10 @@ export default function SpotifyWidget() {
     albumArt: "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36",
     url: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b",
     isPlaying: false,
-    duration: 200000,
-    progress: 85000,
   };
 
   const displayTrack = track || (error || !isLoading ? mockTrack : null);
   const isPlaying = displayTrack?.isPlaying || false;
-
-  useEffect(() => {
-    if (displayTrack) {
-      const dur = displayTrack.duration || 215000;
-      const prog =
-        displayTrack.progress !== undefined && displayTrack.progress > 0
-          ? displayTrack.progress
-          : displayTrack.isPlaying
-          ? 35000
-          : 85000;
-      setCurrentDuration(dur);
-      setCurrentProgress(prog);
-    }
-  }, [
-    displayTrack?.name,
-    displayTrack?.progress,
-    displayTrack?.duration,
-    displayTrack?.isPlaying,
-  ]);
-
-  // Real-time second-by-second ticker when playing
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const timer = setInterval(() => {
-      setCurrentProgress((prev) => {
-        if (currentDuration > 0 && prev >= currentDuration) {
-          return 0;
-        }
-        return prev + 1000;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isPlaying, currentDuration]);
-
-  const progressPercent =
-    currentDuration > 0
-      ? Math.min(100, Math.max(0, (currentProgress / currentDuration) * 100))
-      : 0;
 
   return (
     <section ref={sectionRef} className="pt-2 pb-10 md:pb-14">
@@ -158,7 +103,7 @@ export default function SpotifyWidget() {
                       <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "85%", animationDelay: "450ms" }} />
                     </div>
                   ) : (
-                    <span className="text-white/60 text-[11px]">PAUSED</span>
+                    <span className="text-white/60 text-[11px]">STANDBY</span>
                   )}
                 </div>
               </div>
@@ -222,7 +167,7 @@ export default function SpotifyWidget() {
                       </a>
                     </div>
 
-                    {/* Track Info & Scrubber */}
+                    {/* Track Info & Visualizer */}
                     <div className="flex-1 min-w-0 w-full text-center md:text-left flex flex-col justify-between">
                       <div>
                         {/* Status Tag */}
@@ -259,22 +204,48 @@ export default function SpotifyWidget() {
                         </p>
                       </div>
 
-                      {/* Progress Bar & Timing */}
+                      {/* Live Audio Equalizer Waveform Visualizer */}
                       <div className="mt-4 pt-3 border-t-2 border-dashed border-brutal-black/15 dark:border-brutal-white/15">
-                        <div className="flex items-center justify-between font-mono text-xs font-bold text-brutal-black/70 dark:text-brutal-white/60 mb-1.5">
-                          <span>{formatTime(currentProgress)}</span>
-                          <span className="text-[10px] tracking-wider uppercase text-[#1DB954] bg-[#1DB954]/10 px-1.5 py-0.5 border border-[#1DB954]/30">
-                            {currentDuration > 0 ? `${Math.round(progressPercent)}%` : "LIVE"}
+                        <div className="flex items-center justify-between font-mono text-[11px] font-bold text-brutal-black/70 dark:text-brutal-white/60 mb-2">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`w-2 h-2 rounded-full ${
+                                isPlaying
+                                  ? "bg-[#1DB954] animate-ping"
+                                  : "bg-brutal-black/40 dark:bg-brutal-white/30"
+                              }`}
+                            />
+                            <span className="uppercase tracking-wider text-[10px]">
+                              {isPlaying ? "AUDIO WAVE SPECTRUM" : "AUDIO DECK STANDBY"}
+                            </span>
+                          </div>
+                          <span className="text-[10px] uppercase font-mono px-2 py-0.5 border border-[#1DB954]/40 bg-[#1DB954]/10 text-[#1DB954]">
+                            {isPlaying ? "STREAMING LIVE" : "IDLE"}
                           </span>
-                          <span>{formatTime(currentDuration)}</span>
                         </div>
-                        <div className="w-full h-2.5 bg-brutal-black/15 dark:bg-brutal-white/10 border-2 border-brutal-black/30 dark:border-brutal-white/20 overflow-hidden">
-                          <div
-                            className="h-full bg-[#1DB954] transition-all duration-1000 ease-linear"
-                            style={{
-                              width: `${progressPercent}%`,
-                            }}
-                          />
+
+                        {/* Visualizer Equalizer Frequency Bars */}
+                        <div className="h-9 bg-brutal-black/5 dark:bg-black/30 border-2 border-brutal-black/25 dark:border-brutal-white/20 px-3 py-1.5 flex items-end justify-between gap-1 overflow-hidden">
+                          {[
+                            45, 75, 50, 90, 65, 30, 85, 100, 45, 70, 95, 60, 35, 80, 55, 90,
+                            70, 45, 85, 60, 100, 75, 40, 90, 65, 50, 80, 45, 70, 95, 55, 35,
+                          ].map((baseHeight, i) => (
+                            <span
+                              key={i}
+                              className={`w-1 rounded-xs origin-bottom transition-all duration-300 ${
+                                isPlaying
+                                  ? "bg-[#1DB954]"
+                                  : "bg-brutal-black/20 dark:bg-brutal-white/15"
+                              }`}
+                              style={{
+                                height: isPlaying ? `${baseHeight}%` : "15%",
+                                animation: isPlaying
+                                  ? `equalizerPulse 1s ease-in-out infinite alternate`
+                                  : "none",
+                                animationDelay: `${(i % 10) * 100}ms`,
+                              }}
+                            />
+                          ))}
                         </div>
                       </div>
                     </div>
