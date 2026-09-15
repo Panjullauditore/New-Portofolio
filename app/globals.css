@@ -96,6 +96,10 @@
   100% { transform: scaleY(0.35); opacity: 0.6; }
 }
 
+.animate-equalizer {
+  animation: equalizerPulse 1s ease-in-out infinite alternate;
+}
+
 /* ===== BASE STYLES ===== */
 * {
   box-sizing: border-box;

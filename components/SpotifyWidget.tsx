@@ -234,14 +234,11 @@ export default function SpotifyWidget() {
                               key={i}
                               className={`w-1 rounded-xs origin-bottom transition-all duration-300 ${
                                 isPlaying
-                                  ? "bg-[#1DB954]"
+                                  ? "bg-[#1DB954] animate-equalizer"
                                   : "bg-brutal-black/20 dark:bg-brutal-white/15"
                               }`}
                               style={{
                                 height: isPlaying ? `${baseHeight}%` : "15%",
-                                animation: isPlaying
-                                  ? `equalizerPulse 1s ease-in-out infinite alternate`
-                                  : "none",
                                 animationDelay: `${(i % 10) * 100}ms`,
                               }}
                             />
