@@ -29,6 +29,9 @@ export default function SmoothScroll() {
       const target = e.target as HTMLElement;
       const anchor = target.closest("a");
       if (anchor) {
+        // If the anchor is inside the navbar, let Navbar.tsx handle it exclusively
+        if (anchor.closest("nav")) return;
+
         const href = anchor.getAttribute("href");
         if (href && href.startsWith("#") && href.length > 1) {
           try {

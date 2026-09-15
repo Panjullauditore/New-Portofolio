@@ -24,8 +24,8 @@ export default function Navbar() {
     if (href === "#") {
       e.preventDefault();
       const lenis = (window as any).lenis;
-      if (lenis && typeof lenis.scrollTo === "function") {
-        lenis.scrollTo(0, { duration: 1.1 });
+      if (lenis && typeof lenis.scrollTo === "function" && !lenis.isStopped) {
+        lenis.scrollTo(0, { duration: 1.1, force: true });
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
