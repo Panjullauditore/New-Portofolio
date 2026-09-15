@@ -96,12 +96,12 @@ export default function SpotifyWidget() {
 
     fetchTrack();
 
-    // Fast 5-second polling when tab is active
+    // Fast 2.5-second polling when tab is active (ultra-responsive and safe from rate limits)
     const interval = setInterval(() => {
       if (typeof document !== "undefined" && document.visibilityState === "visible") {
         fetchTrack();
       }
-    }, 5000);
+    }, 2500);
 
     // Instant refresh when user switches tab or returns to browser from Spotify app
     const handleVisibilityChange = () => {
