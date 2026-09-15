@@ -76,7 +76,7 @@ export default function SpotifyWidget() {
           }`}
         >
           <div className="max-w-lg mx-auto">
-            <div className="border-3 border-brutal-black dark:border-brutal-white bg-brutal-black dark:bg-brutal-dark-card shadow-[var(--brutal-shadow)] p-6 overflow-hidden">
+            <div className="card-brutal-static border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-card shadow-[var(--brutal-shadow)] p-6 overflow-hidden transition-colors duration-300">
               {/* Header */}
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -85,10 +85,10 @@ export default function SpotifyWidget() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-heading font-bold text-brutal-white text-sm">
+                  <p className="font-heading font-bold text-brutal-black dark:text-brutal-white text-sm">
                     {displayTrack?.isPlaying ? t.spotify.nowPlaying : t.spotify.recentlyPlayed}
                   </p>
-                  <p className="font-mono text-xs text-brutal-white/50">{t.spotify.onSpotify}</p>
+                  <p className="font-mono text-xs text-brutal-black/60 dark:text-brutal-white/50">{t.spotify.onSpotify}</p>
                 </div>
                 {displayTrack?.isPlaying && (
                   <div className="ml-auto flex items-end gap-1 h-5">
@@ -102,10 +102,10 @@ export default function SpotifyWidget() {
 
               {isLoading && !displayTrack ? (
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-brutal-white/10 border-2 border-brutal-white/20 animate-pulse" />
+                  <div className="w-16 h-16 bg-brutal-black/10 dark:bg-brutal-white/10 border-2 border-brutal-black/20 dark:border-brutal-white/20 animate-pulse" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-brutal-white/10 w-3/4 animate-pulse" />
-                    <div className="h-3 bg-brutal-white/10 w-1/2 animate-pulse" />
+                    <div className="h-4 bg-brutal-black/10 dark:bg-brutal-white/10 w-3/4 animate-pulse" />
+                    <div className="h-3 bg-brutal-black/10 dark:bg-brutal-white/10 w-1/2 animate-pulse" />
                   </div>
                 </div>
               ) : displayTrack ? (
@@ -116,7 +116,7 @@ export default function SpotifyWidget() {
                   className="flex items-center gap-4 group/track"
                 >
                   {/* Album Art */}
-                  <div className="w-16 h-16 flex-shrink-0 border-2 border-brutal-white/30 bg-[#1DB954]/20 flex items-center justify-center group-hover/track:border-[#1DB954] transition-colors overflow-hidden relative">
+                  <div className="w-16 h-16 flex-shrink-0 border-2 border-brutal-black dark:border-brutal-white bg-[#1DB954]/20 flex items-center justify-center group-hover/track:border-[#1DB954] transition-colors overflow-hidden relative shadow-[var(--brutal-shadow-sm)]">
                     {displayTrack.albumArt ? (
                       <img
                         src={displayTrack.albumArt}
@@ -139,19 +139,19 @@ export default function SpotifyWidget() {
 
                   {/* Track Info */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-heading font-bold text-brutal-white truncate group-hover/track:text-[#1DB954] transition-colors">
+                    <p className="font-heading font-bold text-brutal-black dark:text-brutal-white truncate group-hover/track:text-[#1DB954] transition-colors">
                       {displayTrack.name}
                     </p>
-                    <p className="font-body text-sm text-brutal-white/60 truncate">
+                    <p className="font-body text-sm text-brutal-black/75 dark:text-brutal-white/60 truncate">
                       {displayTrack.artist}
                     </p>
-                    <p className="font-mono text-xs text-brutal-white/40 truncate">
+                    <p className="font-mono text-xs text-brutal-black/50 dark:text-brutal-white/40 truncate">
                       {displayTrack.album}
                     </p>
 
                     {/* Progress Bar */}
                     {displayTrack.isPlaying && displayTrack.progress !== undefined && displayTrack.duration !== undefined && (
-                      <div className="mt-2 w-full h-1 bg-brutal-white/10">
+                      <div className="mt-2 w-full h-1 bg-brutal-black/15 dark:bg-brutal-white/10">
                         <div
                           className="h-full bg-[#1DB954] transition-all duration-1000"
                           style={{
@@ -165,7 +165,7 @@ export default function SpotifyWidget() {
                   {/* Open Link Icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4 text-brutal-white/30 flex-shrink-0 group-hover/track:text-[#1DB954] transition-colors"
+                    className="w-4 h-4 text-brutal-black/40 dark:text-brutal-white/30 flex-shrink-0 group-hover/track:text-[#1DB954] transition-colors"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -177,7 +177,7 @@ export default function SpotifyWidget() {
               ) : (
                 <div className="text-center py-4">
                   <span className="text-3xl mb-2 block">🎧</span>
-                  <p className="font-body text-sm text-brutal-white/50">
+                  <p className="font-body text-sm text-brutal-black/60 dark:text-brutal-white/50">
                     {t.spotify.offline}
                   </p>
                 </div>

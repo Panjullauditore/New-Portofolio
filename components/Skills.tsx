@@ -21,7 +21,11 @@ export default function Skills() {
   }, []);
 
   return (
-    <section id="skills" ref={sectionRef} className="py-20 md:py-28 bg-brutal-black dark:bg-brutal-dark-surface">
+    <section
+      id="skills"
+      ref={sectionRef}
+      className="py-20 md:py-28 bg-brutal-cream/70 dark:bg-brutal-dark-surface border-y-3 border-brutal-black dark:border-brutal-white transition-colors duration-300"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${
@@ -33,19 +37,19 @@ export default function Skills() {
             <span className="badge-brutal bg-brutal-green text-brutal-black text-xs font-mono font-bold px-2 py-0.5">
               02
             </span>
-            <h2 className="section-title text-brutal-white after:!bg-brutal-white">
+            <h2 className="section-title text-brutal-black dark:text-brutal-white after:!bg-brutal-black dark:after:!bg-brutal-white">
               {t.skills.badge.replace(/^02\s*/, "")}
             </h2>
           </div>
 
           {/* Marquee */}
-          <div className="overflow-hidden mb-12 border-y-3 border-brutal-white/20 py-4">
+          <div className="overflow-hidden mb-12 border-y-3 border-brutal-black/20 dark:border-brutal-white/20 py-4">
             <div className="marquee-track">
               {[...skillCategories, ...skillCategories].flatMap((cat, copyIndex) =>
                 cat.skills.map((skill, i) => (
                   <span
                     key={`marquee-${copyIndex}-${cat.category}-${skill.name}-${i}`}
-                    className="mx-4 font-mono text-lg md:text-xl font-bold text-brutal-white/60 whitespace-nowrap"
+                    className="mx-4 font-mono text-lg md:text-xl font-bold text-brutal-black/75 dark:text-brutal-white/60 whitespace-nowrap"
                   >
                     {skill.name} <span className="text-brutal-yellow mx-2">✦</span>
                   </span>
@@ -72,7 +76,7 @@ export default function Skills() {
               return (
                 <div
                   key={category.category}
-                  className="border-3 border-brutal-white bg-brutal-white/5 p-6 transition-all duration-300 hover:bg-brutal-white/10"
+                  className="card-brutal-static p-6 border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-card shadow-[var(--brutal-shadow)] transition-all duration-300"
                   style={{
                     animationDelay: `${catIndex * 150}ms`,
                   }}
@@ -80,44 +84,44 @@ export default function Skills() {
                   {/* Category Header */}
                   <div className="flex items-center gap-3 mb-5">
                     <div
-                      className="w-4 h-4 border-2 border-brutal-white"
+                      className="w-4 h-4 border-2 border-brutal-black dark:border-brutal-white"
                       style={{ backgroundColor: category.bgColor }}
                     />
-                    <h3 className="font-heading font-bold text-xl text-brutal-white">
+                    <h3 className="font-heading font-bold text-xl text-brutal-black dark:text-brutal-white">
                       {categoryTitle}
                     </h3>
-                    <span className="font-mono text-xs text-brutal-white/50 ml-auto">
+                    <span className="font-mono text-xs text-brutal-black/60 dark:text-brutal-white/50 ml-auto">
                       {category.skills.length} {t.skills.skillsCountSuffix}
                     </span>
                   </div>
 
-                    {/* Skills */}
-                    <div className="flex flex-wrap gap-2.5">
-                      {category.skills.map((skill) => {
-                        const localizedSkillName =
-                          t.skills.softSkillsList[skill.name] || skill.name;
+                  {/* Skills */}
+                  <div className="flex flex-wrap gap-2.5">
+                    {category.skills.map((skill) => {
+                      const localizedSkillName =
+                        t.skills.softSkillsList[skill.name] || skill.name;
 
-                        const badgeBg = skill.color || category.bgColor;
-                        const badgeText =
-                          skill.textColor ||
-                          (category.category === "Frontend" || category.category === "Soft Skills"
-                            ? "#1A1A2E"
-                            : "#FFFFFF");
+                      const badgeBg = skill.color || category.bgColor;
+                      const badgeText =
+                        skill.textColor ||
+                        (category.category === "Frontend" || category.category === "Soft Skills"
+                          ? "#1A1A2E"
+                          : "#FFFFFF");
 
-                        return (
-                          <span
-                            key={skill.name}
-                            className="badge-brutal font-mono text-xs md:text-sm font-bold border-2 border-brutal-white shadow-[2px_2px_0px_0px_#FAFAF9] hover:translate-x-[1px] hover:translate-y-[1px] transition-all px-3 py-1 uppercase tracking-wider"
-                            style={{
-                              backgroundColor: badgeBg,
-                              color: badgeText,
-                            }}
-                          >
-                            {localizedSkillName}
-                          </span>
-                        );
-                      })}
-                    </div>
+                      return (
+                        <span
+                          key={skill.name}
+                          className="badge-brutal font-mono text-xs md:text-sm font-bold border-2 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all px-3 py-1 uppercase tracking-wider"
+                          style={{
+                            backgroundColor: badgeBg,
+                            color: badgeText,
+                          }}
+                        >
+                          {localizedSkillName}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
