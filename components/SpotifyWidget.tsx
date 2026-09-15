@@ -13,12 +13,29 @@ interface SpotifyTrack {
 }
 
 export default function SpotifyWidget() {
-  const { t } = useLanguage();
+  const { t, isEnglish } = useLanguage();
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  const lastActiveTrackRef = useRef<(SpotifyTrack & { savedAt?: number }) | null>(null);
+
+  // Initialize cached active track from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("last_active_spotify_track");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") {
+          lastActiveTrackRef.current = parsed;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -41,8 +58,31 @@ export default function SpotifyWidget() {
           },
         });
         if (res.ok) {
-          const data = await res.json();
-          setTrack(data);
+          const data: SpotifyTrack = await res.json();
+          if (data.isPlaying) {
+            // Actively playing: save as current active track
+            const trackedObj = { ...data, savedAt: Date.now() };
+            lastActiveTrackRef.current = trackedObj;
+            try {
+              localStorage.setItem("last_active_spotify_track", JSON.stringify(trackedObj));
+            } catch {
+              // ignore
+            }
+            setTrack(data);
+          } else {
+            // Paused / stopped: retain the song the user was just playing
+            // instead of reverting to an older scrobble
+            const cached = lastActiveTrackRef.current;
+            const isRecent = cached?.savedAt && Date.now() - cached.savedAt < 4 * 60 * 60 * 1000;
+            if (cached && isRecent) {
+              setTrack({
+                ...cached,
+                isPlaying: false,
+              });
+            } else {
+              setTrack(data);
+            }
+          }
           setError(false);
         } else {
           setError(true);
@@ -200,13 +240,16 @@ export default function SpotifyWidget() {
                         {/* Status Tag */}
                         <div className="inline-flex items-center gap-2 px-2.5 py-0.5 border-2 border-brutal-black dark:border-brutal-white bg-[#1DB954]/15 text-[#1DB954] font-mono text-xs font-bold uppercase mb-2">
                           <span
-                            className={`w-2 h-2 rounded-full bg-[#1DB954] ${
-                              isPlaying ? "animate-ping" : ""
+                            className={`w-2 h-2 rounded-full ${
+                              isPlaying ? "bg-[#1DB954] animate-ping" : "bg-brutal-black/50 dark:bg-brutal-white/50"
                             }`}
                           />
                           <span>
-                            {isPlaying ? t.spotify.nowPlaying : t.spotify.recentlyPlayed}{" "}
-                            {t.spotify.onSpotify}
+                            {isPlaying
+                              ? `${t.spotify.nowPlaying} ${t.spotify.onSpotify}`
+                              : isEnglish
+                              ? "PAUSED ON SPOTIFY"
+                              : "JEDA DI SPOTIFY"}
                           </span>
                         </div>
 
