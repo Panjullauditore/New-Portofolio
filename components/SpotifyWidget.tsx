@@ -34,10 +34,16 @@ export default function SpotifyWidget() {
   useEffect(() => {
     const fetchTrack = async () => {
       try {
-        const res = await fetch("/api/spotify");
+        const res = await fetch(`/api/spotify?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        });
         if (res.ok) {
           const data = await res.json();
           setTrack(data);
+          setError(false);
         } else {
           setError(true);
         }
@@ -49,8 +55,29 @@ export default function SpotifyWidget() {
     };
 
     fetchTrack();
-    const interval = setInterval(fetchTrack, 30000);
-    return () => clearInterval(interval);
+
+    // Fast 5-second polling when tab is active
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        fetchTrack();
+      }
+    }, 5000);
+
+    // Instant refresh when user switches tab or returns to browser from Spotify app
+    const handleVisibilityChange = () => {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        fetchTrack();
+      }
+    };
+
+    window.addEventListener("focus", handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   // Fallback mock data when API is offline

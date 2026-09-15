@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Configuration for Spotify and Last.fm
 const LASTFM_USERNAME = process.env.LASTFM_USERNAME;
 const LASTFM_API_KEY = process.env.LASTFM_API_KEY;
@@ -140,26 +143,35 @@ async function getSpotifyTrack() {
   return null;
 }
 
+const noCacheHeaders = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 export async function GET() {
   // Priority 1: Check Last.fm (Works for free without Premium!)
   const lastFmTrack = await getLastFmTrack();
   if (lastFmTrack) {
-    return NextResponse.json(lastFmTrack);
+    return NextResponse.json(lastFmTrack, { headers: noCacheHeaders });
   }
 
   // Priority 2: Check Spotify official Player API (if Premium active)
   const spotifyTrack = await getSpotifyTrack();
   if (spotifyTrack) {
-    return NextResponse.json(spotifyTrack);
+    return NextResponse.json(spotifyTrack, { headers: noCacheHeaders });
   }
 
   // Priority 3: Fallback track if no song is currently playing / no scrobbles yet
-  return NextResponse.json({
-    name: "Blinding Lights",
-    artist: "The Weeknd",
-    album: "After Hours",
-    albumArt: "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36",
-    url: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b",
-    isPlaying: false,
-  });
+  return NextResponse.json(
+    {
+      name: "Blinding Lights",
+      artist: "The Weeknd",
+      album: "After Hours",
+      albumArt: "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36",
+      url: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b",
+      isPlaying: false,
+    },
+    { headers: noCacheHeaders }
+  );
 }
