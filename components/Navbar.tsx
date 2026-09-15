@@ -6,6 +6,7 @@ import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";
 import { useLanguage } from "@/context/LanguageContext";
 import { smoothScrollToSection } from "@/utils/scroll";
+import BrandLogo from "./BrandLogo";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -67,9 +68,13 @@ export default function Navbar() {
           <a
             href="#"
             onClick={(e) => handleNavClick(e, "#")}
-            className="font-heading font-bold text-xl md:text-2xl text-brutal-black dark:text-brutal-white hover:text-brutal-red transition-colors cursor-pointer"
+            className="group flex items-center gap-2.5 cursor-pointer select-none"
+            aria-label="Ahmad Fahrezi Portfolio"
           >
-            {"{"} Fahrezi {"}"}
+            <BrandLogo size={36} variant="badge" />
+            <span className="font-heading font-black text-xl md:text-2xl text-brutal-black dark:text-brutal-white group-hover:text-brutal-red transition-colors tracking-tight">
+              {"{"} Fahrezi {"}"}
+            </span>
           </a>
 
           {/* Desktop Navigation */}
