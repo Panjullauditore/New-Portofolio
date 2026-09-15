@@ -1,5 +1,7 @@
 export interface Skill {
   name: string;
+  color?: string; // Brand color from tech stack badge
+  textColor?: string; // Text color (white or dark)
   icon?: string;
 }
 
@@ -16,14 +18,13 @@ export const skillCategories: SkillCategory[] = [
     color: "bg-brutal-yellow",
     bgColor: "#FFE925",
     skills: [
-      { name: "React" },
-      { name: "Next.js" },
-      { name: "TypeScript" },
-      { name: "JavaScript" },
-      { name: "HTML5" },
-      { name: "CSS3" },
-      { name: "Tailwind CSS" },
-      { name: "Vue.js" },
+      { name: "HTML", color: "#E44D26", textColor: "#FFFFFF" },
+      { name: "CSS", color: "#1572B6", textColor: "#FFFFFF" },
+      { name: "JavaScript", color: "#F7DF1E", textColor: "#1A1A2E" },
+      { name: "TypeScript", color: "#3178C6", textColor: "#FFFFFF" },
+      { name: "React", color: "#00D8FF", textColor: "#1A1A2E" },
+      { name: "Next.js", color: "#000000", textColor: "#FFFFFF" },
+      { name: "Tailwind", color: "#06B6D4", textColor: "#FFFFFF" },
     ],
   },
   {
@@ -31,13 +32,11 @@ export const skillCategories: SkillCategory[] = [
     color: "bg-brutal-blue",
     bgColor: "#4D96FF",
     skills: [
-      { name: "Node.js" },
-      { name: "Express" },
-      { name: "Python" },
-      { name: "PostgreSQL" },
-      { name: "MongoDB" },
-      { name: "REST API" },
-      { name: "GraphQL" },
+      { name: "Node.js", color: "#339933", textColor: "#FFFFFF" },
+      { name: "Laravel", color: "#FF2D20", textColor: "#FFFFFF" },
+      { name: "Python", color: "#3776AB", textColor: "#FFFFFF" },
+      { name: "MySQL", color: "#4479A1", textColor: "#FFFFFF" },
+      { name: "Prisma", color: "#2D3748", textColor: "#FFFFFF" },
     ],
   },
   {
@@ -45,13 +44,9 @@ export const skillCategories: SkillCategory[] = [
     color: "bg-brutal-green",
     bgColor: "#6BCB77",
     skills: [
-      { name: "Git" },
-      { name: "Docker" },
-      { name: "VS Code" },
-      { name: "Figma" },
-      { name: "Vercel" },
-      { name: "Linux" },
-      { name: "CI/CD" },
+      { name: "Figma", color: "#F24E1E", textColor: "#FFFFFF" },
+      { name: "Git", color: "#F05032", textColor: "#FFFFFF" },
+      { name: "VS Code", color: "#007ACC", textColor: "#FFFFFF" },
     ],
   },
   {

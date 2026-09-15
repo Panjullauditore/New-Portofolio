@@ -1,6 +1,6 @@
 export const profile = {
   name: "Ahmad Fahrezi",
-  tagline: "Frontend Developer & Designer",
+  tagline: "Fullstack Developer",
   bio: "Passionate developer crafting pixel-perfect, accessible, and performant web experiences. I love turning complex problems into simple, beautiful solutions. Currently exploring the intersection of design and code.",
   location: "Jakarta, Indonesia",
   education: "S1 Informatika",

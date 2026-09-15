@@ -91,23 +91,33 @@ export default function Skills() {
                     </span>
                   </div>
 
-                  {/* Skills */}
-                  <div className="flex flex-wrap gap-2">
-                    {category.skills.map((skill) => {
-                      const localizedSkillName =
-                        t.skills.softSkillsList[skill.name] || skill.name;
+                    {/* Skills */}
+                    <div className="flex flex-wrap gap-2.5">
+                      {category.skills.map((skill) => {
+                        const localizedSkillName =
+                          t.skills.softSkillsList[skill.name] || skill.name;
 
-                      return (
-                        <span
-                          key={skill.name}
-                          className="badge-brutal text-brutal-black font-semibold border-brutal-white"
-                          style={{ backgroundColor: category.bgColor }}
-                        >
-                          {localizedSkillName}
-                        </span>
-                      );
-                    })}
-                  </div>
+                        const badgeBg = skill.color || category.bgColor;
+                        const badgeText =
+                          skill.textColor ||
+                          (category.category === "Frontend" || category.category === "Soft Skills"
+                            ? "#1A1A2E"
+                            : "#FFFFFF");
+
+                        return (
+                          <span
+                            key={skill.name}
+                            className="badge-brutal font-mono text-xs md:text-sm font-bold border-2 border-brutal-white shadow-[2px_2px_0px_0px_#FAFAF9] hover:translate-x-[1px] hover:translate-y-[1px] transition-all px-3 py-1 uppercase tracking-wider"
+                            style={{
+                              backgroundColor: badgeBg,
+                              color: badgeText,
+                            }}
+                          >
+                            {localizedSkillName}
+                          </span>
+                        );
+                      })}
+                    </div>
                 </div>
               );
             })}

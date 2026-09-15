@@ -165,21 +165,21 @@ export const translations: Record<Language, TranslationDictionary> = {
     hero: {
       greeting: "👋 Hi, I am",
       roles: [
-        "Frontend Developer",
-        "UI Designer",
+        "Fullstack Developer",
+        "Backend & Frontend Engineer",
         "Creative Coder",
         "Problem Solver",
       ],
-      bio: "Passionate developer crafting pixel-perfect, accessible, and performant web experiences. I love turning complex problems into simple, beautiful solutions. Currently exploring the intersection of modern design and code.",
+      bio: "Passionate fullstack developer engineering scalable web applications, robust backend architectures, and pixel-perfect digital interfaces. Skilled across modern frontend, server-side frameworks, and database engineering.",
       viewProjects: "View Projects",
       downloadCv: "Download CV",
       scrollDown: "Scroll down",
     },
     about: {
       badge: "01 About Me",
-      title: "Passionate Coder & Creative Mind",
+      title: "Fullstack Developer & Digital Craftsman",
       subtitle:
-        "Crafting modern, responsive & user-centric digital experiences with high visual fidelity.",
+        "Crafting modern, responsive & user-centric digital experiences with high visual fidelity and robust backend foundations.",
       facts: {
         location: { label: "Location", value: "Jakarta, ID" },
         education: { label: "Education", value: "B.S. in Computer Science" },
@@ -187,17 +187,17 @@ export const translations: Record<Language, TranslationDictionary> = {
         experience: { label: "Experience", value: "3+ Years" },
       },
       storyP1:
-        "I am a frontend developer based in Jakarta, Indonesia, with a deep obsession for typography, motion, and bold interactive web aesthetics.",
+        "I am a fullstack developer based in Jakarta, Indonesia, skilled across modern frontend engineering, robust backend services, databases, and bold interactive web aesthetics.",
       storyP2:
         "My journey began with basic web experiments and has evolved into building scalable full-stack web applications, rich design systems, and fluid digital interfaces.",
       storyP3:
         "I believe software should not only work reliably under the hood, but also surprise and delight users through thoughtful micro-interactions and tactile feedback.",
       currentFocusTitle: "Current Tech Focus",
       currentFocusItems: [
-        "Modern Next.js App Router Architecture",
-        "Tailwind CSS & Neo-Brutalism Design Systems",
-        "Fluid Micro-animations & Web Performance",
-        "RESTful APIs, Edge Functions & Cloud Integrations",
+        "Next.js & React Fullstack Ecosystem",
+        "Laravel, Node.js & RESTful APIs",
+        "MySQL, Prisma ORM & Database Architecture",
+        "Tailwind CSS, TypeScript & UI Systems",
       ],
     },
     skills: {
@@ -494,21 +494,21 @@ export const translations: Record<Language, TranslationDictionary> = {
     hero: {
       greeting: "👋 Halo, saya",
       roles: [
-        "Frontend Developer",
-        "Desainer UI",
+        "Fullstack Developer",
+        "Backend & Frontend Engineer",
         "Creative Coder",
         "Pemecah Masalah",
       ],
-      bio: "Developer yang berdedikasi membangun pengalaman web yang presisi, aksesibel, dan berkinerja tinggi. Saya gemar mengubah tantangan kompleks menjadi solusi yang intuitif dan elegan. Saat ini berfokus pada perpaduan desain modern dan kode.",
+      bio: "Fullstack Developer yang berdedikasi membangun aplikasi web end-to-end, arsitektur backend yang tangguh, serta antarmuka digital yang mulus dan berkinerja tinggi. Senang memadukan logika teknis yang kuat dengan desain modern yang presisi.",
       viewProjects: "Lihat Proyek",
       downloadCv: "Download CV",
       scrollDown: "Scroll ke bawah",
     },
     about: {
       badge: "01 Tentang Saya",
-      title: "Kreator Digital & Pengembang Web",
+      title: "Fullstack Developer & Kreator Digital",
       subtitle:
-        "Membangun pengalaman digital yang modern, responsif, dan berorientasi pengguna dengan estetika visual tinggi.",
+        "Membangun pengalaman digital yang modern, responsif, dan berorientasi pengguna dengan estetika visual tinggi serta pondasi backend yang kokoh.",
       facts: {
         location: { label: "Lokasi", value: "Jakarta, ID" },
         education: { label: "Pendidikan", value: "S1 Informatika" },
@@ -516,17 +516,17 @@ export const translations: Record<Language, TranslationDictionary> = {
         experience: { label: "Pengalaman", value: "3+ Tahun" },
       },
       storyP1:
-        "Saya adalah seorang frontend developer yang berdomisili di Jakarta, Indonesia, dengan ketertarikan mendalam pada tipografi, animasi mikro, dan estetika web interaktif.",
+        "Saya adalah seorang fullstack developer yang berdomisili di Jakarta, Indonesia, menguasai pengembangan frontend modern, backend tangguh, pengelolaan database, serta estetika web interaktif.",
       storyP2:
         "Perjalanan saya dimulai dari eksplorasi dasar web development dan berkembang menjadi pembangunan aplikasi full-stack yang scalable, sistem desain, serta antarmuka digital yang mulus.",
       storyP3:
         "Saya percaya bahwa perangkat lunak tidak hanya harus andal secara teknis, tetapi juga harus memberikan pengalaman visual yang memikat dan interaksi taktil yang menyenangkan bagi pengguna.",
       currentFocusTitle: "Fokus Teknologi Saat Ini",
       currentFocusItems: [
-        "Arsitektur Next.js App Router Modern",
-        "Sistem Desain Tailwind CSS & Neo-Brutalism",
-        "Animasi Mikro Halus & Optimasi Web Performance",
-        "REST API, Edge Functions & Integrasi Cloud",
+        "Ekosistem Fullstack Next.js & React",
+        "Laravel, Node.js & RESTful APIs",
+        "MySQL, Prisma ORM & Desain Database",
+        "Tailwind CSS, TypeScript & Desain Modern",
       ],
     },
     skills: {

@@ -5,23 +5,26 @@ import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
-  title: "Ahmad Fahrezi — Frontend Developer & Designer | Portfolio",
+  title: "Ahmad Fahrezi — Fullstack Developer | Portfolio",
   description:
-    "Website portofolio pribadi Ahmad Fahrezi — Frontend Developer & Designer. Lihat proyek, pengalaman, dan keahlian saya. Dibuat dengan gaya Neo Brutalism.",
+    "Website portofolio pribadi Ahmad Fahrezi — Fullstack Developer. Lihat proyek, pengalaman, dan keahlian saya. Dibuat dengan gaya Neo Brutalism.",
   keywords: [
     "portfolio",
-    "frontend developer",
+    "fullstack developer",
     "web developer",
-    "designer",
+    "software engineer",
     "neo brutalism",
     "react",
     "next.js",
+    "laravel",
+    "node.js",
+    "typescript",
   ],
   authors: [{ name: "Ahmad Fahrezi" }],
   openGraph: {
-    title: "Ahmad Fahrezi — Frontend Developer & Designer",
+    title: "Ahmad Fahrezi — Fullstack Developer",
     description:
-      "Website portofolio pribadi Ahmad Fahrezi. Lihat proyek, pengalaman, dan keahlian.",
+      "Website portofolio pribadi Ahmad Fahrezi — Fullstack Developer. Lihat proyek, pengalaman, dan keahlian.",
     url: "https://ahmadfahrezi.dev",
     siteName: "Ahmad Fahrezi Portfolio",
     type: "website",
@@ -29,9 +32,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ahmad Fahrezi — Frontend Developer & Designer",
+    title: "Ahmad Fahrezi — Fullstack Developer",
     description:
-      "Website portofolio pribadi Ahmad Fahrezi. Neo Brutalism style.",
+      "Website portofolio pribadi Ahmad Fahrezi — Fullstack Developer. Neo Brutalism style.",
   },
   robots: {
     index: true,

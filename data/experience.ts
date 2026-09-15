@@ -41,7 +41,7 @@ export interface Experience {
  *     id: "exp-1",
  *     type: "work", // "work" | "education" | "organization"
  *     institution: "Nama Perusahaan / Startup",
- *     role: "Frontend Developer",
+ *     role: "Fullstack Developer",
  *     duration: "2024 — Sekarang",
  *     startDate: "2024-01",
  *     endDate: "present",
