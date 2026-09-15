@@ -181,13 +181,13 @@ export const translations: Record<Language, TranslationDictionary> = {
       subtitle:
         "Crafting modern, responsive & user-centric digital experiences with high visual fidelity and robust backend foundations.",
       facts: {
-        location: { label: "Location", value: "Jakarta, ID" },
-        education: { label: "Education", value: "B.S. in Computer Science" },
-        status: { label: "Status", value: "Open to Work" },
-        experience: { label: "Experience", value: "3+ Years" },
+        location: { label: "Location", value: "Semarang, ID" },
+        education: { label: "Education", value: "B.S. in CS - Undip" },
+        status: { label: "Status", value: "Open to Work / Collab" },
+        experience: { label: "Experience", value: "2.5 Years" },
       },
       storyP1:
-        "I am a fullstack developer based in Jakarta, Indonesia, skilled across modern frontend engineering, robust backend services, databases, and bold interactive web aesthetics.",
+        "I am a fullstack developer based in Semarang, Indonesia, holding a Bachelor's degree in Computer Science from Diponegoro University (Undip). Skilled across modern frontend engineering, robust backend services, databases, and bold interactive web aesthetics.",
       storyP2:
         "My journey began with basic web experiments and has evolved into building scalable full-stack web applications, rich design systems, and fluid digital interfaces.",
       storyP3:
@@ -510,13 +510,13 @@ export const translations: Record<Language, TranslationDictionary> = {
       subtitle:
         "Membangun pengalaman digital yang modern, responsif, dan berorientasi pengguna dengan estetika visual tinggi serta pondasi backend yang kokoh.",
       facts: {
-        location: { label: "Lokasi", value: "Jakarta, ID" },
-        education: { label: "Pendidikan", value: "S1 Informatika" },
-        status: { label: "Status", value: "Siap Kerja" },
-        experience: { label: "Pengalaman", value: "3+ Tahun" },
+        location: { label: "Lokasi", value: "Semarang, ID" },
+        education: { label: "Pendidikan", value: "S1 Informatika Undip" },
+        status: { label: "Status", value: "Siap Kerja / Kolaborasi" },
+        experience: { label: "Pengalaman", value: "2,5 Tahun" },
       },
       storyP1:
-        "Saya adalah seorang fullstack developer yang berdomisili di Jakarta, Indonesia, menguasai pengembangan frontend modern, backend tangguh, pengelolaan database, serta estetika web interaktif.",
+        "Saya adalah seorang fullstack developer yang berdomisili di Semarang, Indonesia, lulusan S1 Informatika di Universitas Diponegoro (Undip). Menguasai pengembangan frontend modern, backend tangguh, pengelolaan database, serta estetika web interaktif.",
       storyP2:
         "Perjalanan saya dimulai dari eksplorasi dasar web development dan berkembang menjadi pembangunan aplikasi full-stack yang scalable, sistem desain, serta antarmuka digital yang mulus.",
       storyP3:

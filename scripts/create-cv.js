@@ -42,61 +42,61 @@ BT
 (AHMAD FAHREZI) Tj
 /F2 14 Tf
 0 -24 Td
-(Frontend Developer & UI/UX Designer) Tj
+(Fullstack Developer) Tj
 /F2 10 Tf
 0 -18 Td
 (Email: ahmadfahrezir@gmail.com | Portfolio: ahmadfahrezi.dev | GitHub: github.com/ahmadfahrezi) Tj
 
 /F1 14 Tf
-0 -36 Td
+0 -32 Td
 (SUMMARY) Tj
 /F2 10 Tf
 0 -18 Td
-(Frontend Developer with 3+ years experience building bold, responsive web applications.) Tj
+(Fullstack Developer with 2.5+ years experience building scalable, responsive web applications.) Tj
 0 -14 Td
-(Specializing in React, Next.js, TypeScript, and Neo Brutalism design systems.) Tj
+(Specializing in Next.js, React, Node.js, Laravel, TypeScript, and modern UI systems.) Tj
 
 /F1 14 Tf
 0 -32 Td
 (EXPERIENCE) Tj
 /F1 11 Tf
 0 -18 Td
-(Senior Frontend Developer - Tech Studio Jakarta (2024 - Present)) Tj
+(Fullstack Developer - Web & Tech Solutions (2024 - Present)) Tj
 /F2 10 Tf
 0 -14 Td
-(- Leading a team of 4 developers building enterprise web apps and design systems.) Tj
+(- Developing modern full-stack web applications and robust backend APIs.) Tj
 0 -14 Td
-(- Improved Core Web Vitals performance across client sites by 40%.) Tj
+(- Improving system performance, database schemas, and user interfaces.) Tj
 
 /F1 11 Tf
 0 -22 Td
-(Frontend Developer - Digital Creative Agency (2022 - 2024)) Tj
+(Web Developer - Digital Creative Studio (2022 - 2024)) Tj
 /F2 10 Tf
 0 -14 Td
-(- Developed 15+ responsive client websites using Next.js, Tailwind CSS, and Figma.) Tj
+(- Built responsive web applications and interactive client platforms.) Tj
 0 -14 Td
-(- Integrated third-party APIs including Spotify, Stripe, and CMS headless.) Tj
+(- Integrated third-party APIs including Spotify, REST endpoints, and databases.) Tj
 
 /F1 14 Tf
 0 -32 Td
 (SKILLS) Tj
 /F2 10 Tf
 0 -18 Td
-(- Languages: TypeScript, JavaScript, HTML5, CSS3, Python) Tj
+(- Languages & Frameworks: Next.js, React, TypeScript, JavaScript, Laravel, Python, Node.js) Tj
 0 -14 Td
-(- Frameworks & Tools: Next.js, React, Tailwind CSS, Node.js, Git, Docker, Figma) Tj
+(- Databases & Tools: MySQL, Prisma ORM, Git, VS Code, Tailwind CSS, Figma) Tj
 0 -14 Td
-(- Concepts: Neo Brutalism, Responsive Design, Web Performance, SEO, REST API) Tj
+(- Competencies: Fullstack Architecture, RESTful APIs, Agile/Scrum, Problem Solving) Tj
 
 /F1 14 Tf
 0 -32 Td
 (EDUCATION) Tj
 /F1 11 Tf
 0 -18 Td
-(Bachelor of Computer Science - Universitas Indonesia (2018 - 2022)) Tj
+(Bachelor of Computer Science - Universitas Diponegoro (Undip)) Tj
 /F2 10 Tf
 0 -14 Td
-(Graduated with Honors - GPA 3.82/4.00) Tj
+(Department of Informatics) Tj
 ET
 endstream
 endobj
