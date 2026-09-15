@@ -105,16 +105,10 @@ export default function Projects() {
                 </h3>
 
                 {/* Description */}
-                <p className="font-body text-base md:text-lg text-brutal-black/75 dark:text-brutal-white/70 leading-relaxed mb-8">
+                <p className="font-body text-base md:text-lg text-brutal-black/75 dark:text-brutal-white/70 leading-relaxed">
                   {t.projects.comingSoon?.description ||
                     "I am currently preparing, curating, and polishing my latest web applications, client solutions, and open-source experiments. Projects will appear here shortly!"}
                 </p>
-
-                {/* Brutalist terminal badge hint */}
-                <div className="bg-brutal-cream dark:bg-brutal-dark-surface border-2 border-brutal-black dark:border-brutal-white px-4 py-2.5 font-mono text-xs text-brutal-black/70 dark:text-brutal-white/60 inline-flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-brutal-green animate-pulse inline-block" />
-                  <span>{t.projects.comingSoon?.hint || "Ready to be populated in data/projects.ts"}</span>
-                </div>
               </div>
             </div>
           ) : (

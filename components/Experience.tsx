@@ -83,16 +83,10 @@ export default function Experience() {
                 </h3>
 
                 {/* Description */}
-                <p className="font-body text-base md:text-lg text-brutal-black/75 dark:text-brutal-white/70 leading-relaxed mb-8">
+                <p className="font-body text-base md:text-lg text-brutal-black/75 dark:text-brutal-white/70 leading-relaxed">
                   {t.experience.comingSoon?.description ||
                     "My professional career milestones, academic degrees, and verified certificates are currently being compiled with image evidence. Check back soon!"}
                 </p>
-
-                {/* Brutalist terminal badge hint */}
-                <div className="bg-brutal-cream dark:bg-brutal-dark-surface border-2 border-brutal-black dark:border-brutal-white px-4 py-2.5 font-mono text-xs text-brutal-black/70 dark:text-brutal-white/60 inline-flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-brutal-green animate-pulse inline-block" />
-                  <span>{t.experience.comingSoon?.hint || "Ready to be populated in data/experience.ts"}</span>
-                </div>
               </div>
             </div>
           ) : (
