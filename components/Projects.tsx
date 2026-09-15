@@ -84,22 +84,57 @@ export default function Projects() {
             </h2>
           </div>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2 mb-10">
-            {categories.map((cat) => (
-              <button
-                key={cat.key}
-                onClick={() => setActiveCategory(cat.key)}
-                className={`px-4 py-2 font-heading font-bold text-sm border-3 transition-all duration-100 cursor-pointer ${
-                  activeCategory === cat.key
-                    ? "bg-brutal-black dark:bg-brutal-white text-brutal-white dark:text-brutal-black border-brutal-black dark:border-brutal-white shadow-none translate-x-[2px] translate-y-[2px]"
-                    : "bg-brutal-white dark:bg-brutal-dark-card text-brutal-black dark:text-brutal-white border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_var(--brutal-border)]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+          {/* Projects Content or Coming Soon State */}
+          {projects.length === 0 ? (
+            <div className="card-brutal p-8 md:p-14 text-center bg-brutal-white dark:bg-brutal-dark-card border-4 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-lg)] relative overflow-hidden">
+              {/* Background Accent Watermark */}
+              <div className="absolute -right-8 -bottom-8 opacity-5 dark:opacity-10 pointer-events-none select-none">
+                <span className="text-9xl font-heading font-black">PROJ</span>
+              </div>
+
+              <div className="max-w-2xl mx-auto flex flex-col items-center">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 bg-brutal-yellow text-brutal-black px-4 py-1.5 border-3 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] font-mono text-xs md:text-sm font-bold uppercase mb-6 rotate-[-1deg]">
+                  <span>🚀</span>
+                  <span>{t.projects.comingSoon?.badge || "COMING SOON"}</span>
+                </div>
+
+                {/* Title */}
+                <h3 className="font-heading font-bold text-2xl md:text-4xl text-brutal-black dark:text-brutal-white mb-4">
+                  {t.projects.comingSoon?.title || "Featured Projects Under Construction"}
+                </h3>
+
+                {/* Description */}
+                <p className="font-body text-base md:text-lg text-brutal-black/75 dark:text-brutal-white/70 leading-relaxed mb-8">
+                  {t.projects.comingSoon?.description ||
+                    "I am currently preparing, curating, and polishing my latest web applications, client solutions, and open-source experiments. Projects will appear here shortly!"}
+                </p>
+
+                {/* Brutalist terminal badge hint */}
+                <div className="bg-brutal-cream dark:bg-brutal-dark-surface border-2 border-brutal-black dark:border-brutal-white px-4 py-2.5 font-mono text-xs text-brutal-black/70 dark:text-brutal-white/60 inline-flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-brutal-green animate-pulse inline-block" />
+                  <span>{t.projects.comingSoon?.hint || "Ready to be populated in data/projects.ts"}</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Category Filter */}
+              <div className="flex flex-wrap gap-2 mb-10">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.key}
+                    onClick={() => setActiveCategory(cat.key)}
+                    className={`px-4 py-2 font-heading font-bold text-sm border-3 transition-all duration-100 cursor-pointer ${
+                      activeCategory === cat.key
+                        ? "bg-brutal-black dark:bg-brutal-white text-brutal-white dark:text-brutal-black border-brutal-black dark:border-brutal-white shadow-none translate-x-[2px] translate-y-[2px]"
+                        : "bg-brutal-white dark:bg-brutal-dark-card text-brutal-black dark:text-brutal-white border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-sm)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_var(--brutal-border)]"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
 
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -211,8 +246,10 @@ export default function Projects() {
               );
             })}
           </div>
-        </div>
-      </div>
+        </>
+      )}
+    </div>
+  </div>
 
       {/* Project Detail Modal */}
       {selectedProject && (

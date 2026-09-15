@@ -72,6 +72,12 @@ export interface TranslationDictionary {
       close: string;
       backToProjects: string;
     };
+    comingSoon: {
+      badge: string;
+      title: string;
+      description: string;
+      hint: string;
+    };
     items: {
       id: string;
       title: string;
@@ -86,6 +92,16 @@ export interface TranslationDictionary {
     badge: string;
     title: string;
     subtitle: string;
+    comingSoon: {
+      badge: string;
+      title: string;
+      description: string;
+      hint: string;
+    };
+    proofBadge: string;
+    viewProof: string;
+    closeProof: string;
+    viewCredentialUrl: string;
     typeLabels: {
       work: string;
       education: string;
@@ -222,6 +238,13 @@ export const translations: Record<Language, TranslationDictionary> = {
       liveDemo: "Live Demo",
       sourceCode: "Source Code",
       featured: "FEATURED",
+      comingSoon: {
+        badge: "COMING SOON",
+        title: "Featured Projects Under Construction",
+        description:
+          "I am currently preparing, curating, and polishing my latest web applications, client solutions, and open-source experiments. Projects will appear here shortly!",
+        hint: "Fill in your real projects anytime in data/projects.ts",
+      },
       modal: {
         problem: "The Challenge",
         solution: "The Solution & Architecture",
@@ -346,6 +369,17 @@ export const translations: Record<Language, TranslationDictionary> = {
       title: "Career & Education",
       subtitle:
         "My professional journey, academic background, and community contributions.",
+      comingSoon: {
+        badge: "COMING SOON",
+        title: "Experience & Journey Coming Soon",
+        description:
+          "My professional career milestones, academic degrees, and verified certificates are currently being compiled with image evidence. Check back soon!",
+        hint: "Fill in your experience & upload proof images in data/experience.ts",
+      },
+      proofBadge: "CERTIFICATE & EVIDENCE",
+      viewProof: "View Certificate / Proof",
+      closeProof: "Close Preview",
+      viewCredentialUrl: "Verify Original Credential ↗",
       typeLabels: {
         work: "Work",
         education: "Education",
@@ -533,6 +567,13 @@ export const translations: Record<Language, TranslationDictionary> = {
       liveDemo: "Live Demo",
       sourceCode: "Source Code",
       featured: "UNGGULAN",
+      comingSoon: {
+        badge: "SEGERA HADIR",
+        title: "Proyek Unggulan Sedang Disiapkan",
+        description:
+          "Saya sedang menyusun, memoles, dan mempersiapkan showcase aplikasi web, solusi klien, dan eksperimen kreatif terbaru. Karya-karya unggulan akan segera hadir di sini!",
+        hint: "Isi proyek Anda kapan saja di data/projects.ts",
+      },
       modal: {
         problem: "Tantangan Masalah",
         solution: "Solusi & Arsitektur",
@@ -657,6 +698,17 @@ export const translations: Record<Language, TranslationDictionary> = {
       title: "Karier & Pendidikan",
       subtitle:
         "Jejak langkah profesional, latar belakang akademis, serta kontribusi komunitas saya.",
+      comingSoon: {
+        badge: "SEGERA HADIR",
+        title: "Pengalaman & Riwayat Karir Segera Hadir",
+        description:
+          "Riwayat karir profesional, pendidikan, dan sertifikat bukti pengalaman sedang dalam proses pembaruan dan dokumentasi. Nantikan segera!",
+        hint: "Isi riwayat pengalaman & upload foto bukti kapan saja di data/experience.ts",
+      },
+      proofBadge: "BUKTI & SERTIFIKAT",
+      viewProof: "Lihat Bukti / Sertifikat",
+      closeProof: "Tutup Preview",
+      viewCredentialUrl: "Verifikasi Tautan Asli ↗",
       typeLabels: {
         work: "Kerja",
         education: "Pendidikan",

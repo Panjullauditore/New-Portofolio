@@ -8,68 +8,55 @@ export interface Experience {
   endDate: string;
   description: string[];
   color: string;
+  /**
+   * Path gambar bukti / sertifikat / dokumentasi.
+   * Contoh: "/images/experience/sertifikat-magang.jpg" (letakkan file di folder /public/images/experience/)
+   * atau URL gambar dari internet (https://...).
+   */
+  proofImage?: string;
+  /**
+   * Keterangan singkat foto bukti / sertifikat
+   * Contoh: "Sertifikat Kelulusan Fullstack Developer", "Dokumentasi Pekerjaan Proyek XYZ"
+   */
+  proofCaption?: string;
+  /**
+   * Tautan verifikasi eksternal (opsional)
+   * Contoh: "https://cert.efset.org/xxx" atau link LinkedIn credential
+   */
+  proofUrl?: string;
 }
 
-export const experiences: Experience[] = [
-  {
-    id: "exp-1",
-    type: "work",
-    institution: "Tech Startup ABC",
-    role: "Frontend Developer",
-    duration: "2024 — Sekarang",
-    startDate: "2024-01",
-    endDate: "present",
-    description: [
-      "Membangun dan memelihara aplikasi web menggunakan React & Next.js",
-      "Meningkatkan performa halaman utama hingga 40% (Lighthouse score)",
-      "Berkolaborasi dengan tim desain untuk implementasi design system",
-      "Mentoring 2 junior developer dalam best practices frontend",
-    ],
-    color: "#FFE925",
-  },
-  {
-    id: "exp-2",
-    type: "work",
-    institution: "Digital Agency XYZ",
-    role: "Junior Web Developer",
-    duration: "2022 — 2024",
-    startDate: "2022-06",
-    endDate: "2024-01",
-    description: [
-      "Mengembangkan website klien menggunakan Vue.js dan WordPress",
-      "Mengoptimasi SEO untuk 10+ website klien",
-      "Membuat landing page responsive untuk kampanye digital",
-    ],
-    color: "#4D96FF",
-  },
-  {
-    id: "exp-3",
-    type: "education",
-    institution: "Universitas Indonesia",
-    role: "S1 Teknik Informatika",
-    duration: "2018 — 2022",
-    startDate: "2018-08",
-    endDate: "2022-07",
-    description: [
-      "IPK: 3.75/4.00",
-      "Tugas Akhir: Sistem Rekomendasi berbasis Machine Learning",
-      "Aktif di komunitas coding dan hackathon",
-    ],
-    color: "#6BCB77",
-  },
-  {
-    id: "exp-4",
-    type: "organization",
-    institution: "Google Developer Student Club",
-    role: "Lead",
-    duration: "2020 — 2021",
-    startDate: "2020-08",
-    endDate: "2021-07",
-    description: [
-      "Memimpin komunitas 100+ anggota aktif",
-      "Mengorganisir 12+ workshop dan tech talk",
-      "Menjalin kerja sama dengan industri untuk program mentoring",
-    ],
-    color: "#FF6B9D",
-  },
-];
+/**
+ * =====================================================================
+ * EXPERIENCE & JOURNEY DATA
+ * =====================================================================
+ * Saat ini dikosongkan (Coming Soon) sesuai permintaan.
+ * Anda dapat menambahkan riwayat pengalaman Anda sendiri kapan saja ke dalam array di bawah ini.
+ *
+ * CONTOH MENAMBAHKAN PENGALAMAN & BUKTI FOTO / SERTIFIKAT:
+ * (Cukup uncomment dan ganti dengan data & foto Anda):
+ *
+ * export const experiences: Experience[] = [
+ *   {
+ *     id: "exp-1",
+ *     type: "work", // "work" | "education" | "organization"
+ *     institution: "Nama Perusahaan / Startup",
+ *     role: "Frontend Developer",
+ *     duration: "2024 — Sekarang",
+ *     startDate: "2024-01",
+ *     endDate: "present",
+ *     description: [
+ *       "Mengembangkan fitur antarmuka web modern dengan Next.js dan Tailwind CSS.",
+ *       "Meningkatkan performa web dan kepuasan pengguna sebesar 35%.",
+ *       "Berkolaborasi langsung dengan product manager dan UI/UX designer.",
+ *     ],
+ *     color: "#FFE925", // Warna Neo-Brutalism (#FFE925, #4D96FF, #6BCB77, #FF6B9D, #FF8C42)
+ *     // 👇 KODE UNTUK MENARUH GAMBAR BUKTI / SERTIFIKAT 👇
+ *     proofImage: "/images/experience/bukti-kerja.jpg", // Simpan gambar di folder public/images/experience/
+ *     proofCaption: "Sertifikat Rekomendasi Kerja / Surat Keterangan Kerja",
+ *     proofUrl: "https://linkedin.com/in/username", // Opsional
+ *   },
+ * ];
+ * =====================================================================
+ */
+export const experiences: Experience[] = [];
