@@ -58,7 +58,7 @@ export default function About() {
                       src={profile.avatar}
                       alt={profile.name}
                       onError={() => setImgError(true)}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <div className="w-full h-full bg-brutal-blue/20 flex items-center justify-center">
