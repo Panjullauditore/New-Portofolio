@@ -31,7 +31,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" ref={sectionRef} className="py-20 md:py-28">
+    <section id="about" ref={sectionRef} className="py-10 md:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${
@@ -39,7 +39,7 @@ export default function About() {
           }`}
         >
           {/* Section Title */}
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex items-center gap-3 mb-8">
             <span className="badge-brutal bg-brutal-blue text-white text-xs font-mono font-bold px-2 py-0.5">
               01
             </span>

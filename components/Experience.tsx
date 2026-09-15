@@ -45,7 +45,7 @@ export default function Experience() {
   }, [selectedProof]);
 
   return (
-    <section id="experience" ref={sectionRef} className="pt-20 md:pt-28 pb-8 md:pb-12 bg-brutal-cream/60 dark:bg-brutal-dark">
+    <section id="experience" ref={sectionRef} className="py-10 md:py-14 bg-brutal-cream/60 dark:bg-brutal-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${
@@ -53,7 +53,7 @@ export default function Experience() {
           }`}
         >
           {/* Section Title */}
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex items-center gap-3 mb-8">
             <span className="badge-brutal bg-brutal-orange text-white text-xs font-mono font-bold px-2 py-0.5">
               04
             </span>
@@ -64,7 +64,7 @@ export default function Experience() {
 
           {/* Coming Soon State OR Timeline */}
           {experiences.length === 0 ? (
-            <div className="card-brutal p-8 md:p-14 text-center bg-brutal-white dark:bg-brutal-dark-card border-4 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-lg)] relative overflow-hidden">
+            <div className="card-brutal p-6 md:p-10 text-center bg-brutal-white dark:bg-brutal-dark-card border-4 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-lg)] relative overflow-hidden">
               {/* Background Accent Watermark */}
               <div className="absolute -right-8 -bottom-8 opacity-5 dark:opacity-10 pointer-events-none select-none">
                 <span className="text-9xl font-heading font-black">EXP</span>

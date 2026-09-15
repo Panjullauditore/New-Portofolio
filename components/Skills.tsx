@@ -24,7 +24,7 @@ export default function Skills() {
     <section
       id="skills"
       ref={sectionRef}
-      className="py-20 md:py-28 bg-brutal-cream/70 dark:bg-brutal-dark-surface border-y-3 border-brutal-black dark:border-brutal-white transition-colors duration-300"
+      className="py-10 md:py-14 bg-brutal-cream/70 dark:bg-brutal-dark-surface border-y-3 border-brutal-black dark:border-brutal-white transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -33,7 +33,7 @@ export default function Skills() {
           }`}
         >
           {/* Section Title */}
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex items-center gap-3 mb-8">
             <span className="badge-brutal bg-brutal-green text-brutal-black text-xs font-mono font-bold px-2 py-0.5">
               02
             </span>
@@ -43,7 +43,7 @@ export default function Skills() {
           </div>
 
           {/* Marquee */}
-          <div className="overflow-hidden mb-12 border-y-3 border-brutal-black/20 dark:border-brutal-white/20 py-4">
+          <div className="overflow-hidden mb-8 border-y-3 border-brutal-black/20 dark:border-brutal-white/20 py-4">
             <div className="marquee-track">
               {[...skillCategories, ...skillCategories].flatMap((cat, copyIndex) =>
                 cat.skills.map((skill, i) => (

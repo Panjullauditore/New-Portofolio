@@ -67,7 +67,7 @@ export default function Projects() {
   const selectedTrans = selectedProject ? getProjectTranslation(selectedProject.id) : null;
 
   return (
-    <section id="projects" ref={sectionRef} className="py-20 md:py-28">
+    <section id="projects" ref={sectionRef} className="py-10 md:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${
@@ -86,7 +86,7 @@ export default function Projects() {
 
           {/* Projects Content or Coming Soon State */}
           {projects.length === 0 ? (
-            <div className="card-brutal p-8 md:p-14 text-center bg-brutal-white dark:bg-brutal-dark-card border-4 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-lg)] relative overflow-hidden">
+            <div className="card-brutal p-6 md:p-10 text-center bg-brutal-white dark:bg-brutal-dark-card border-4 border-brutal-black dark:border-brutal-white shadow-[var(--brutal-shadow-lg)] relative overflow-hidden">
               {/* Background Accent Watermark */}
               <div className="absolute -right-8 -bottom-8 opacity-5 dark:opacity-10 pointer-events-none select-none">
                 <span className="text-9xl font-heading font-black">PROJ</span>

@@ -107,7 +107,7 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" ref={sectionRef} className="py-20 md:py-28 bg-brutal-yellow dark:bg-brutal-dark-surface">
+    <section id="contact" ref={sectionRef} className="py-10 md:py-14 bg-brutal-yellow dark:bg-brutal-dark-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${
@@ -115,7 +115,7 @@ export default function Contact() {
           }`}
         >
           {/* Section Title */}
-          <div className="mb-12 text-center">
+          <div className="mb-8 text-center">
             <div className="inline-flex items-center justify-center gap-3 mb-4">
               <span className="badge-brutal bg-brutal-black text-brutal-yellow dark:bg-brutal-yellow dark:text-brutal-black text-xs font-mono font-bold px-2 py-0.5">
                 05

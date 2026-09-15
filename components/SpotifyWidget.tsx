@@ -79,7 +79,7 @@ export default function SpotifyWidget() {
   const isPlaying = displayTrack?.isPlaying || false;
 
   return (
-    <section ref={sectionRef} className="pt-2 pb-14 md:pb-20">
+    <section ref={sectionRef} className="pt-2 pb-10 md:pb-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`transition-all duration-700 ${
