@@ -26,7 +26,7 @@ export default function Navbar() {
       e.preventDefault();
       const lenis = (window as any).lenis;
       if (lenis && typeof lenis.scrollTo === "function" && !lenis.isStopped) {
-        lenis.scrollTo(0, { duration: 0.6, force: true });
+        lenis.scrollTo(0, { duration: 1.1, force: true });
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -39,7 +39,7 @@ export default function Navbar() {
       e.preventDefault();
       const targetElement = document.querySelector(href);
       if (targetElement) {
-        smoothScrollToSection(targetElement, 0.6);
+        smoothScrollToSection(targetElement, 1.1);
         history.pushState(null, "", href);
       }
       setIsMobileMenuOpen(false);

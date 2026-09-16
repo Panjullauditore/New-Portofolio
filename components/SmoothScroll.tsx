@@ -12,7 +12,7 @@ export default function SmoothScroll() {
     }
 
     const lenis = new Lenis({
-      duration: 0.8,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
@@ -38,7 +38,7 @@ export default function SmoothScroll() {
             const targetElement = document.querySelector(href);
             if (targetElement) {
               e.preventDefault();
-              smoothScrollToSection(targetElement, 0.6);
+              smoothScrollToSection(targetElement, 1.1);
               history.pushState(null, "", href);
             }
           } catch {

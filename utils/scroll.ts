@@ -26,7 +26,7 @@ let currentAnimationId: number | null = null;
  * High-performance, silky-smooth fallback scroll animation using requestAnimationFrame
  * and an exponential/quartic deceleration curve.
  */
-function animateScroll(targetY: number, durationMs = 600): void {
+function animateScroll(targetY: number, durationMs = 1100): void {
   if (typeof window === "undefined") return;
 
   if (currentAnimationId !== null) {
@@ -65,7 +65,7 @@ function animateScroll(targetY: number, durationMs = 600): void {
  * Smoothly scrolls to the section using Lenis if active,
  * or custom fluid rAF animation as a guaranteed smooth fallback.
  */
-export function smoothScrollToSection(targetElement: Element, duration = 0.6): void {
+export function smoothScrollToSection(targetElement: Element, duration = 1.1): void {
   if (typeof window === "undefined" || !targetElement) return;
 
   const targetScrollTop = getSectionScrollPosition(targetElement);
