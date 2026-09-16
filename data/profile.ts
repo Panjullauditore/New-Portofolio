@@ -15,10 +15,10 @@ export const profile = {
    */
   avatar: "/avatar.jpg",
   socialLinks: {
-    github: "https://github.com/ahmadfahrezi",
+    github: "https://github.com/Panjullauditore",
     linkedin: "https://linkedin.com/in/ahmadfahrezi",
-    twitter: "https://twitter.com/ahmadfahrezi",
-    instagram: "https://instagram.com/ahmadfahrezi",
+    X: "https://x.com/panjulauditore",
+    instagram: "https://instagram.com/rezzinhere7",
   },
   facts: [
     { label: "Lokasi", value: "Semarang, ID", emoji: "📍" },
