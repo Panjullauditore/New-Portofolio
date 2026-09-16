@@ -17,7 +17,7 @@ export const profile = {
   socialLinks: {
     github: "https://github.com/Panjullauditore",
     linkedin: "https://www.linkedin.com/in/ahmadfahrezi7",
-    x: "https://x.com/panjulauditore",
+    x: "", // Kosongkan "" untuk hide. Isi "https://x.com/panjulauditore" untuk menampilkan kembali
     instagram: "https://instagram.com/rezzinhere7",
   },
   facts: [
