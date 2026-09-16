@@ -16,7 +16,7 @@ export const profile = {
   avatar: "/avatar.jpg",
   socialLinks: {
     github: "https://github.com/Panjullauditore",
-    linkedin: "https://linkedin.com/in/ahmadfahrezi",
+    linkedin: "https://www.linkedin.com/in/ahmadfahrezi7",
     x: "https://x.com/panjulauditore",
     instagram: "https://instagram.com/rezzinhere7",
   },
