@@ -6,8 +6,8 @@ export const profile = {
   education: "S1 Informatika - Universitas Diponegoro",
   status: "Open to Work / Collab",
   email: "ahmadfahrezir@gmail.com",
-  phone: "+62 812 3456 7890",
-  whatsapp: "6281234567890",
+  phone: "+62 857 5091 7426",
+  whatsapp: "6285750917426",
   /**
    * Foto profil untuk bagian About Me.
    * Cukup simpan file foto Anda di folder /public/ (misal: public/avatar.jpg atau public/images/foto-saya.jpg)
@@ -17,7 +17,8 @@ export const profile = {
   socialLinks: {
     github: "https://github.com/Panjullauditore",
     linkedin: "https://linkedin.com/in/ahmadfahrezi",
-    X: "https://x.com/panjulauditore",
+    twitter: "https://x.com/panjulauditore",
+    x: "https://x.com/panjulauditore",
     instagram: "https://instagram.com/rezzinhere7",
   },
   facts: [
