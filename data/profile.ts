@@ -17,7 +17,6 @@ export const profile = {
   socialLinks: {
     github: "https://github.com/Panjullauditore",
     linkedin: "https://linkedin.com/in/ahmadfahrezi",
-    twitter: "https://x.com/panjulauditore",
     x: "https://x.com/panjulauditore",
     instagram: "https://instagram.com/rezzinhere7",
   },

@@ -75,8 +75,8 @@ export default function Contact() {
       ),
     },
     {
-      name: "X (Twitter)",
-      url: profile.socialLinks.x || profile.socialLinks.twitter,
+      name: "X",
+      url: profile.socialLinks.x,
       color: "#FF6B9D",
       icon: (
         <svg viewBox="0 0 24 24" className="w-6 h-6" fill="currentColor">
