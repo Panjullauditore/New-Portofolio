@@ -26,7 +26,7 @@ let currentAnimationId: number | null = null;
  * High-performance, silky-smooth fallback scroll animation using requestAnimationFrame
  * and an exponential/quartic deceleration curve.
  */
-function animateScroll(targetY: number, durationMs = 1100): void {
+function animateScroll(targetY: number, durationMs = 600): void {
   if (typeof window === "undefined") return;
 
   if (currentAnimationId !== null) {
@@ -40,14 +40,14 @@ function animateScroll(targetY: number, durationMs = 1100): void {
 
   const startTime = performance.now();
 
-  function easeOutQuart(t: number): number {
-    return 1 - Math.pow(1 - t, 4);
+  function easeOutCubic(t: number): number {
+    return 1 - Math.pow(1 - t, 3);
   }
 
   function frame(now: number) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / durationMs, 1);
-    const ease = easeOutQuart(progress);
+    const ease = easeOutCubic(progress);
 
     window.scrollTo(0, Math.round(startY + diff * ease));
 
@@ -65,14 +65,14 @@ function animateScroll(targetY: number, durationMs = 1100): void {
  * Smoothly scrolls to the section using Lenis if active,
  * or custom fluid rAF animation as a guaranteed smooth fallback.
  */
-export function smoothScrollToSection(targetElement: Element, duration = 1.1): void {
+export function smoothScrollToSection(targetElement: Element, duration = 0.6): void {
   if (typeof window === "undefined" || !targetElement) return;
 
   const targetScrollTop = getSectionScrollPosition(targetElement);
   const now = Date.now();
 
-  // Deduplicate identical triggers within 200ms (e.g. rapid clicks or overlapping handlers)
-  if (Math.abs(targetScrollTop - lastTarget) < 2 && now - lastScrollTime < 200) {
+  // Deduplicate identical triggers within 100ms
+  if (Math.abs(targetScrollTop - lastTarget) < 2 && now - lastScrollTime < 100) {
     return;
   }
   lastScrollTime = now;
@@ -83,8 +83,9 @@ export function smoothScrollToSection(targetElement: Element, duration = 1.1): v
   if (lenis && typeof lenis.scrollTo === "function" && !lenis.isStopped) {
     lenis.scrollTo(targetScrollTop, {
       duration,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      easing: (t: number) => 1 - Math.pow(1 - t, 3),
       force: true,
+      immediate: false,
     });
   } else {
     animateScroll(targetScrollTop, duration * 1000);
