@@ -21,6 +21,9 @@ export default function SmoothScroll() {
       touchMultiplier: 1.5,
     });
 
+    // Add lenis classes to root for proper CSS normalization
+    document.documentElement.classList.add("lenis", "lenis-smooth");
+
     // Expose lenis globally
     (window as any).lenis = lenis;
 
@@ -58,6 +61,7 @@ export default function SmoothScroll() {
     const rafId = requestAnimationFrame(raf);
 
     return () => {
+      document.documentElement.classList.remove("lenis", "lenis-smooth");
       delete (window as any).lenis;
       document.removeEventListener("click", handleAnchorClick, true);
       cancelAnimationFrame(rafId);

@@ -24,13 +24,11 @@ export default function Navbar() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href === "#") {
       e.preventDefault();
-      const lenis = (window as any).lenis;
-      if (lenis && typeof lenis.scrollTo === "function" && !lenis.isStopped) {
-        lenis.scrollTo(0, { duration: 1.1, force: true });
-      } else {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      const heroElement = document.getElementById("hero") || document.documentElement;
+      smoothScrollToSection(heroElement, 1.1);
+      if (window.location.hash) {
+        history.replaceState(null, "", window.location.pathname);
       }
-      history.pushState(null, "", window.location.pathname);
       setIsMobileMenuOpen(false);
       return;
     }
@@ -40,7 +38,9 @@ export default function Navbar() {
       const targetElement = document.querySelector(href);
       if (targetElement) {
         smoothScrollToSection(targetElement, 1.1);
-        history.pushState(null, "", href);
+        if (window.location.hash !== href) {
+          history.replaceState(null, "", href);
+        }
       }
       setIsMobileMenuOpen(false);
     }
