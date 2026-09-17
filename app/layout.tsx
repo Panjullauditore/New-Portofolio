@@ -48,6 +48,7 @@ export const metadata: Metadata = {
 };
 
 import { LanguageProvider } from "@/context/LanguageContext";
+import CustomCursor from "@/components/CustomCursor";
 
 // Script to prevent dark mode flash on page load - defaults to dark mode
 const themeScript = `
@@ -75,6 +76,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <LanguageProvider>
+          <CustomCursor />
           <SmoothScroll />
           <Navbar />
           {children}

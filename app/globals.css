@@ -149,6 +149,21 @@ body {
   color: var(--color-brutal-white);
 }
 
+/* Hide default cursor on fine-pointer devices when custom cursor is active */
+@media (pointer: fine) and (hover: hover) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button,
+  body.has-custom-cursor [role="button"],
+  body.has-custom-cursor input,
+  body.has-custom-cursor select,
+  body.has-custom-cursor textarea,
+  body.has-custom-cursor label,
+  body.has-custom-cursor .cursor-pointer {
+    cursor: none !important;
+  }
+}
+
 ::selection {
   background-color: var(--color-brutal-yellow);
   color: var(--color-brutal-black);
