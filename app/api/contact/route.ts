@@ -73,8 +73,8 @@ export async function POST(req: Request) {
         <body>
           <div class="card">
             <div class="header">
-              <span class="badge">PESAN BARU</span>
-              <h2 style="margin: 0; font-size: 22px;">Inquiry Kerja Sama Portofolio</h2>
+              <span class="badge">PESAN MASUK</span>
+              <h2 style="margin: 0; font-size: 22px;">Pesan Baru dari Website Portofolio</h2>
             </div>
             <div class="content">
               <div class="field">
@@ -90,7 +90,7 @@ export async function POST(req: Request) {
                 <div class="message-box">${message}</div>
               </div>
               <div style="text-align: center;">
-                <a href="mailto:${email}?subject=Re: Portofolio Inquiry" class="btn">Balas Langsung (${email})</a>
+                <a href="mailto:${email}?subject=Re: Pesan dari Portofolio" class="btn">Balas Langsung (${email})</a>
               </div>
             </div>
             <div class="footer">
