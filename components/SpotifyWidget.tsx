@@ -70,17 +70,15 @@ export default function SpotifyWidget() {
             }
             setTrack(data);
           } else {
-            // Paused / stopped: retain the song the user was just playing
-            // instead of reverting to an older scrobble
-            const cached = lastActiveTrackRef.current;
-            const isRecent = cached?.savedAt && Date.now() - cached.savedAt < 4 * 60 * 60 * 1000;
-            if (cached && isRecent) {
-              setTrack({
-                ...cached,
-                isPlaying: false,
-              });
-            } else {
-              setTrack(data);
+            // Paused / stopped: The server already intelligently compares scrobble timestamps
+            // to ensure the paused track is preserved until a newer track is scrobbled or played.
+            setTrack(data);
+            const trackedObj = { ...data, isPlaying: false };
+            lastActiveTrackRef.current = trackedObj;
+            try {
+              localStorage.setItem("last_active_spotify_track", JSON.stringify(trackedObj));
+            } catch {
+              // ignore
             }
           }
           setError(false);
@@ -122,11 +120,11 @@ export default function SpotifyWidget() {
 
   // Fallback mock data when API is offline
   const mockTrack: SpotifyTrack = {
-    name: "Blinding Lights",
-    artist: "The Weeknd",
-    album: "After Hours",
-    albumArt: "https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36",
-    url: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b",
+    name: "shawty tjantik",
+    artist: "Kecoud, Crisbe",
+    album: "shawty tjantik (feat. Crisbe) - Single",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/2a/df/ab/2adfab08-6e3a-8344-79ae-c09307176ab2/820200199294.jpg/600x600bb.jpg",
+    url: "https://open.spotify.com/search/shawty%20tjantik%20Kecoud",
     isPlaying: false,
   };
 
