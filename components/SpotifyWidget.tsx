@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface SpotifyTrack {
@@ -12,6 +12,22 @@ interface SpotifyTrack {
   isPlaying: boolean;
 }
 
+interface ParsedLyricLine {
+  time: number;
+  text: string;
+}
+
+interface LyricsData {
+  found: boolean;
+  trackName?: string;
+  artistName?: string;
+  isSynced?: boolean;
+  syncedLyrics?: string | null;
+  plainLyrics?: string | null;
+  lines?: ParsedLyricLine[];
+  message?: string;
+}
+
 export default function SpotifyWidget() {
   const { t, isEnglish } = useLanguage();
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
@@ -20,6 +36,18 @@ export default function SpotifyWidget() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  // Lyrics states
+  const [showLyrics, setShowLyrics] = useState(false);
+  const [lyricsData, setLyricsData] = useState<LyricsData | null>(null);
+  const [isLyricsLoading, setIsLyricsLoading] = useState(false);
+  const [lyricsMode, setLyricsMode] = useState<"karaoke" | "full">("karaoke");
+  const [playbackSec, setPlaybackSec] = useState<number>(0);
+  const [isSimPlaying, setIsSimPlaying] = useState(true);
+  const [autoScroll, setAutoScroll] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const lyricsScrollRef = useRef<HTMLDivElement>(null);
+  const activeLineRef = useRef<HTMLDivElement>(null);
   const lastActiveTrackRef = useRef<(SpotifyTrack & { savedAt?: number }) | null>(null);
 
   // Initialize cached active track from localStorage
@@ -71,7 +99,6 @@ export default function SpotifyWidget() {
             setTrack(data);
           } else {
             // Paused / stopped: retain the song the user was just playing
-            // instead of reverting to an older scrobble
             const cached = lastActiveTrackRef.current;
             const isRecent = cached?.savedAt && Date.now() - cached.savedAt < 4 * 60 * 60 * 1000;
             if (cached && isRecent) {
@@ -96,14 +123,13 @@ export default function SpotifyWidget() {
 
     fetchTrack();
 
-    // Fast 2.5-second polling when tab is active (ultra-responsive and safe from rate limits)
+    // Fast 2.5-second polling when tab is active
     const interval = setInterval(() => {
       if (typeof document !== "undefined" && document.visibilityState === "visible") {
         fetchTrack();
       }
     }, 2500);
 
-    // Instant refresh when user switches tab or returns to browser from Spotify app
     const handleVisibilityChange = () => {
       if (typeof document !== "undefined" && document.visibilityState === "visible") {
         fetchTrack();
@@ -133,6 +159,116 @@ export default function SpotifyWidget() {
   const displayTrack = track || (error || !isLoading ? mockTrack : null);
   const isPlaying = displayTrack?.isPlaying || false;
 
+  // Sync simulation play state with actual track isPlaying
+  useEffect(() => {
+    setIsSimPlaying(isPlaying);
+    if (isPlaying) {
+      // Start or keep playing
+    }
+  }, [isPlaying]);
+
+  // Fetch lyrics when current track title or artist changes
+  useEffect(() => {
+    if (!displayTrack?.name || !displayTrack?.artist) return;
+
+    let isMounted = true;
+    setIsLyricsLoading(true);
+    setPlaybackSec(0);
+
+    const fetchLyrics = async () => {
+      try {
+        const query = new URLSearchParams({
+          track: displayTrack.name,
+          artist: displayTrack.artist,
+        });
+        const res = await fetch(`/api/lyrics?${query.toString()}`);
+        if (!isMounted) return;
+
+        if (res.ok) {
+          const data: LyricsData = await res.json();
+          setLyricsData(data);
+          if (data.found && data.isSynced && data.lines && data.lines.length > 0) {
+            setLyricsMode("karaoke");
+          } else {
+            setLyricsMode("full");
+          }
+        } else {
+          setLyricsData({ found: false, message: "Lirik belum ditemukan" });
+        }
+      } catch {
+        if (isMounted) {
+          setLyricsData({ found: false, message: "Gagal memuat lirik" });
+        }
+      } finally {
+        if (isMounted) {
+          setIsLyricsLoading(false);
+        }
+      }
+    };
+
+    fetchLyrics();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [displayTrack?.name, displayTrack?.artist]);
+
+  // Playback timer ticker for karaoke sync
+  useEffect(() => {
+    if (!isSimPlaying) return;
+
+    const timer = setInterval(() => {
+      setPlaybackSec((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isSimPlaying]);
+
+  // Find active line index
+  const lines = lyricsData?.lines || [];
+  const currentLineIndex = lines.reduce((latestIdx, line, idx) => {
+    if (line.time <= playbackSec) {
+      return idx;
+    }
+    return latestIdx;
+  }, -1);
+
+  // Auto-scroll to active lyric line
+  useEffect(() => {
+    if (!autoScroll || lyricsMode !== "karaoke" || currentLineIndex < 0) return;
+    if (activeLineRef.current && lyricsScrollRef.current) {
+      const container = lyricsScrollRef.current;
+      const element = activeLineRef.current;
+      const targetScroll =
+        element.offsetTop - container.offsetTop - container.clientHeight / 2 + element.clientHeight / 2;
+      container.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: "smooth",
+      });
+    }
+  }, [currentLineIndex, autoScroll, lyricsMode]);
+
+  // Copy lyrics handler
+  const handleCopyLyrics = useCallback(() => {
+    if (!lyricsData) return;
+    const textToCopy =
+      lyricsData.plainLyrics ||
+      lyricsData.lines?.map((l) => l.text).join("\n") ||
+      "";
+    if (textToCopy && navigator.clipboard) {
+      navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, [lyricsData]);
+
+  // Time format helper (e.g. 84 -> "01:24")
+  const formatTime = (sec: number) => {
+    const mins = Math.floor(sec / 60);
+    const remainder = Math.floor(sec % 60);
+    return `${mins.toString().padStart(2, "0")}:${remainder.toString().padStart(2, "0")}`;
+  };
+
   return (
     <section ref={sectionRef} className="pt-2 pb-10 md:pb-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -145,7 +281,7 @@ export default function SpotifyWidget() {
             {/* Retro Audio Console Container */}
             <div className="card-brutal-static border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-card shadow-[var(--brutal-shadow-lg)] overflow-hidden transition-all duration-300">
               {/* Retro Console Header Strip */}
-              <div className="bg-brutal-black dark:bg-[#111118] text-white px-4 py-2.5 border-b-3 border-brutal-black dark:border-brutal-white flex items-center justify-between gap-2 select-none">
+              <div className="bg-brutal-black dark:bg-[#111118] text-white px-4 py-2.5 border-b-3 border-brutal-black dark:border-brutal-white flex items-center justify-between gap-2 select-none flex-wrap">
                 {/* Vintage dots */}
                 <div className="flex items-center gap-1.5">
                   <span className="w-3 h-3 rounded-full bg-brutal-red border border-black/40 inline-block" />
@@ -156,22 +292,53 @@ export default function SpotifyWidget() {
                   </span>
                 </div>
 
-                {/* Spotify Brand & Status */}
-                <div className="flex items-center gap-2 font-mono text-xs font-bold">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#1DB954]" fill="currentColor">
-                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                  </svg>
-                  <span className="text-[#1DB954] hidden xs:inline">SPOTIFY</span>
-                  {isPlaying ? (
-                    <div className="flex items-end gap-0.5 h-4 ml-1">
-                      <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "65%", animationDelay: "0ms" }} />
-                      <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "100%", animationDelay: "150ms" }} />
-                      <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "45%", animationDelay: "300ms" }} />
-                      <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "85%", animationDelay: "450ms" }} />
-                    </div>
-                  ) : (
-                    <span className="text-white/60 text-[11px]">STANDBY</span>
-                  )}
+                {/* Right side controls: Spotify Brand + LYRICS Button */}
+                <div className="flex items-center gap-2.5 font-mono text-xs font-bold">
+                  {/* Lyrics Toggle Button */}
+                  <button
+                    onClick={() => setShowLyrics((prev) => !prev)}
+                    className={`px-2.5 py-1 border-2 border-brutal-black dark:border-brutal-white font-mono text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#fff] active:translate-x-0.5 active:translate-y-0.5 ${
+                      showLyrics
+                        ? "bg-brutal-yellow text-brutal-black ring-2 ring-white/40"
+                        : "bg-white/10 hover:bg-white/20 text-white"
+                    }`}
+                    title={
+                      showLyrics
+                        ? isEnglish ? "Hide Lyrics Sheet" : "Tutup Kertas Lirik"
+                        : isEnglish ? "Open Lyrics Sheet" : "Buka Kertas Lirik"
+                    }
+                  >
+                    <span>♫</span>
+                    <span>{isEnglish ? "LYRICS" : "LIRIK"}</span>
+                    {lyricsData?.found && (
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          lyricsData.isSynced ? "bg-[#1DB954] animate-pulse" : "bg-brutal-blue"
+                        }`}
+                        title={lyricsData.isSynced ? "Synced Karaoke" : "Plain Lyrics"}
+                      />
+                    )}
+                    <span className="text-[10px] opacity-70">
+                      {showLyrics ? "▲" : "▼"}
+                    </span>
+                  </button>
+
+                  <div className="flex items-center gap-1.5 border-l border-white/20 pl-2">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#1DB954]" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                    <span className="text-[#1DB954] hidden sm:inline">SPOTIFY</span>
+                    {isPlaying ? (
+                      <div className="flex items-end gap-0.5 h-3.5 ml-0.5">
+                        <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "65%", animationDelay: "0ms" }} />
+                        <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "100%", animationDelay: "150ms" }} />
+                        <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "45%", animationDelay: "300ms" }} />
+                        <span className="w-1 bg-[#1DB954] animate-bounce" style={{ height: "85%", animationDelay: "450ms" }} />
+                      </div>
+                    ) : (
+                      <span className="text-white/60 text-[10px]">STANDBY</span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -315,6 +482,40 @@ export default function SpotifyWidget() {
                           ))}
                         </div>
                       </div>
+
+                      {/* Interactive Lyrics Quick Call-To-Action Banner */}
+                      <div className="mt-4 pt-3 flex flex-wrap items-center justify-between gap-2">
+                        <button
+                          onClick={() => setShowLyrics((prev) => !prev)}
+                          className={`w-full sm:w-auto px-4 py-2 border-2 border-brutal-black dark:border-brutal-white font-mono text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all shadow-[3px_3px_0px_#1A1A2E] dark:shadow-[3px_3px_0px_#FAFAF9] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px] ${
+                            showLyrics
+                              ? "bg-brutal-yellow text-brutal-black"
+                              : "bg-[#1DB954] text-black hover:bg-[#1ed760]"
+                          }`}
+                        >
+                          <span className="text-sm">♫</span>
+                          <span>
+                            {showLyrics
+                              ? isEnglish ? "FOLD LYRIC SHEET ▲" : "TUTUP KERTAS LIRIK ▲"
+                              : isEnglish ? "OPEN CASSETTE LYRICS ▼" : "BUKA KERTAS LIRIK KASET ▼"}
+                          </span>
+                          {lyricsData?.found && lyricsData.isSynced && (
+                            <span className="ml-1 px-1.5 py-0.2 bg-black text-white text-[9px] font-mono rounded-xs">
+                              KARAOKE
+                            </span>
+                          )}
+                        </button>
+
+                        <span className="font-mono text-[11px] text-brutal-black/60 dark:text-brutal-white/50 italic hidden sm:inline">
+                          {isLyricsLoading
+                            ? isEnglish ? "Searching cassette archive..." : "Mencari arsip lirik..."
+                            : lyricsData?.found
+                            ? lyricsData.isSynced
+                              ? isEnglish ? "Synced lyrics ready ⚡" : "Lirik tersinkronisasi siap ⚡"
+                              : isEnglish ? "Text lyrics ready 📄" : "Lirik teks tersedia 📄"
+                            : isEnglish ? "No lyrics yet" : "Lirik belum tersedia"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ) : (
@@ -329,6 +530,288 @@ export default function SpotifyWidget() {
                   </div>
                 )}
               </div>
+
+              {/* ===== EXPANDABLE CASSETTE J-CARD LYRIC SHEET ===== */}
+              {showLyrics && (
+                <div className="border-t-3 border-brutal-black dark:border-brutal-white bg-[#FFFDF5] dark:bg-[#0E0E18] transition-all animate-fadeIn">
+                  {/* Cassette J-Card Inlay Header */}
+                  <div className="p-4 sm:p-5 border-b-2 border-dashed border-brutal-black/30 dark:border-brutal-white/20 bg-brutal-yellow/20 dark:bg-brutal-yellow/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 select-none">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 bg-brutal-black text-white dark:bg-brutal-white dark:text-brutal-black font-mono text-[10px] font-black tracking-widest uppercase">
+                          CASSETTE J-CARD // INLAY
+                        </span>
+                        <span className="font-mono text-xs font-black text-brutal-black dark:text-brutal-white uppercase">
+                          {displayTrack?.name || "Track"}
+                        </span>
+                        <span className="font-mono text-xs text-brutal-black/60 dark:text-brutal-white/60">
+                          — {displayTrack?.artist}
+                        </span>
+                      </div>
+                      <p className="font-mono text-[10px] text-brutal-black/60 dark:text-brutal-white/50 mt-1">
+                        {isEnglish
+                          ? "Click any lyric line to jump playback time immediately"
+                          : "Klik baris lirik mana saja untuk melompat ke waktu tersebut"}
+                      </p>
+                    </div>
+
+                    {/* Controls Bar: Karaoke/Full mode, Auto-Scroll, Copy */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {/* Mode Toggle (if synced lyrics available) */}
+                      {lyricsData?.lines && lyricsData.lines.length > 0 && (
+                        <div className="inline-flex border-2 border-brutal-black dark:border-brutal-white font-mono text-[11px] font-bold overflow-hidden shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#fff]">
+                          <button
+                            onClick={() => setLyricsMode("karaoke")}
+                            className={`px-2.5 py-1 transition-colors cursor-pointer ${
+                              lyricsMode === "karaoke"
+                                ? "bg-[#1DB954] text-black"
+                                : "bg-white dark:bg-black/60 text-brutal-black dark:text-white hover:bg-gray-100"
+                            }`}
+                          >
+                            🎤 {isEnglish ? "KARAOKE" : "KARAOKE"}
+                          </button>
+                          <button
+                            onClick={() => setLyricsMode("full")}
+                            className={`px-2.5 py-1 border-l-2 border-brutal-black dark:border-brutal-white transition-colors cursor-pointer ${
+                              lyricsMode === "full"
+                                ? "bg-[#1DB954] text-black"
+                                : "bg-white dark:bg-black/60 text-brutal-black dark:text-white hover:bg-gray-100"
+                            }`}
+                          >
+                            📄 {isEnglish ? "FULL TEXT" : "TEKS LENGKAP"}
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Auto-Scroll Toggle */}
+                      {lyricsMode === "karaoke" && lyricsData?.lines && (
+                        <button
+                          onClick={() => setAutoScroll((prev) => !prev)}
+                          className={`px-2.5 py-1 border-2 border-brutal-black dark:border-brutal-white font-mono text-[11px] font-bold transition-all shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#fff] cursor-pointer ${
+                            autoScroll
+                              ? "bg-brutal-blue text-white"
+                              : "bg-white dark:bg-black/50 text-brutal-black/60 dark:text-white/60"
+                          }`}
+                          title="Toggle Auto-Scroll"
+                        >
+                          ⚡ {autoScroll ? "SCROLL: ON" : "SCROLL: OFF"}
+                        </button>
+                      )}
+
+                      {/* Copy Lyrics Button */}
+                      {lyricsData?.found && (
+                        <button
+                          onClick={handleCopyLyrics}
+                          className="px-2.5 py-1 border-2 border-brutal-black dark:border-brutal-white bg-white dark:bg-black/60 font-mono text-[11px] font-bold text-brutal-black dark:text-white hover:bg-brutal-yellow hover:text-black transition-all shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#fff] cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
+                          title={isEnglish ? "Copy lyrics to clipboard" : "Salin lirik ke clipboard"}
+                        >
+                          {copied ? (isEnglish ? "✓ COPIED!" : "✓ TERSALIN!") : isEnglish ? "📋 COPY" : "📋 SALIN"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Karaoke Playback Scrubber Deck (when synced lyrics exist) */}
+                  {lyricsMode === "karaoke" && lyricsData?.lines && lyricsData.lines.length > 0 && (
+                    <div className="px-4 py-2 bg-brutal-black/5 dark:bg-white/5 border-b-2 border-dashed border-brutal-black/20 dark:border-brutal-white/10 flex items-center justify-between gap-2 flex-wrap font-mono text-xs">
+                      {/* Simulated Playback Timer */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-brutal-black/60 dark:text-white/60 uppercase">
+                          {isEnglish ? "TIME" : "WAKTU"}:
+                        </span>
+                        <span className="px-2 py-0.5 bg-brutal-black text-white dark:bg-brutal-white dark:text-black font-black text-xs rounded-xs">
+                          {formatTime(playbackSec)}
+                        </span>
+                        <span className="text-[11px] text-brutal-black/50 dark:text-white/40">
+                          {isPlaying
+                            ? isEnglish ? "(Syncing with Spotify)" : "(Sinkron dengan Spotify)"
+                            : isEnglish ? "(Playback paused)" : "(Playback dijeda)"}
+                        </span>
+                      </div>
+
+                      {/* Manual Scrub Controls (Jump 5s, Play/Pause, Reset) */}
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => setPlaybackSec((s) => Math.max(0, s - 5))}
+                          className="px-2 py-0.5 border border-brutal-black dark:border-brutal-white bg-white dark:bg-black text-[10px] font-bold cursor-pointer hover:bg-brutal-yellow hover:text-black"
+                          title="-5s"
+                        >
+                          -5s
+                        </button>
+                        <button
+                          onClick={() => setIsSimPlaying((p) => !p)}
+                          className={`px-2.5 py-0.5 border border-brutal-black dark:border-brutal-white text-[10px] font-bold cursor-pointer ${
+                            isSimPlaying ? "bg-[#1DB954] text-black" : "bg-brutal-red text-white"
+                          }`}
+                          title="Play/Pause Timer"
+                        >
+                          {isSimPlaying ? "⏸ PAUSE" : "▶ PLAY"}
+                        </button>
+                        <button
+                          onClick={() => setPlaybackSec((s) => s + 5)}
+                          className="px-2 py-0.5 border border-brutal-black dark:border-brutal-white bg-white dark:bg-black text-[10px] font-bold cursor-pointer hover:bg-brutal-yellow hover:text-black"
+                          title="+5s"
+                        >
+                          +5s
+                        </button>
+                        <button
+                          onClick={() => setPlaybackSec(0)}
+                          className="px-2 py-0.5 border border-brutal-black dark:border-brutal-white bg-white dark:bg-black text-[10px] font-bold cursor-pointer hover:bg-brutal-red hover:text-white"
+                          title="Reset to 00:00"
+                        >
+                          ↺ 00:00
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Lyrics Content Body */}
+                  <div
+                    ref={lyricsScrollRef}
+                    className="p-5 md:p-6 max-h-[380px] overflow-y-auto scroll-smooth relative font-body"
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(0,0,0,0.03) 31px, rgba(0,0,0,0.03) 32px)",
+                    }}
+                  >
+                    {isLyricsLoading ? (
+                      /* Loading tape spool animation */
+                      <div className="py-12 text-center space-y-3">
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full border-3 border-brutal-black dark:border-brutal-white bg-brutal-yellow text-brutal-black animate-spin">
+                          <span className="text-xl">⚙</span>
+                        </div>
+                        <p className="font-heading font-black text-base text-brutal-black dark:text-brutal-white">
+                          {isEnglish ? "UNWINDING CASSETTE TAPE..." : "MEMUTAR PITA KASET LIRIK..."}
+                        </p>
+                        <p className="font-mono text-xs text-brutal-black/60 dark:text-white/60">
+                          {isEnglish ? "Fetching lyrics from LRCLIB archive" : "Mengambil lirik dari arsip LRCLIB"}
+                        </p>
+                      </div>
+                    ) : lyricsData?.found ? (
+                      lyricsMode === "karaoke" && lyricsData.lines && lyricsData.lines.length > 0 ? (
+                        /* Karaoke Synced View */
+                        <div className="space-y-3">
+                          {lyricsData.lines.map((line, idx) => {
+                            const isActive = idx === currentLineIndex;
+                            const isPast = idx < currentLineIndex;
+
+                            return (
+                              <div
+                                key={`${line.time}-${idx}`}
+                                ref={isActive ? activeLineRef : null}
+                                onClick={() => {
+                                  setPlaybackSec(line.time);
+                                  setIsSimPlaying(true);
+                                }}
+                                className={`group p-3 border-2 transition-all duration-200 cursor-pointer flex items-baseline gap-3 ${
+                                  isActive
+                                    ? "bg-brutal-yellow dark:bg-[#1DB954] border-brutal-black text-brutal-black shadow-[4px_4px_0px_#1A1A2E] scale-[1.02] font-black"
+                                    : isPast
+                                    ? "border-transparent text-brutal-black/55 dark:text-white/50 hover:bg-black/5 dark:hover:bg-white/5 hover:border-brutal-black/30"
+                                    : "border-transparent text-brutal-black/75 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 hover:border-brutal-black/30"
+                                }`}
+                              >
+                                {/* Timestamp badge */}
+                                <span
+                                  className={`font-mono text-[11px] px-1.5 py-0.5 rounded-xs border select-none flex-shrink-0 transition-colors ${
+                                    isActive
+                                      ? "bg-black text-white border-black font-black"
+                                      : "bg-black/5 dark:bg-white/10 text-brutal-black/60 dark:text-white/50 border-black/20 dark:border-white/20 group-hover:text-black group-hover:border-black"
+                                  }`}
+                                >
+                                  {formatTime(line.time)}
+                                </span>
+
+                                {/* Lyric text */}
+                                <span
+                                  className={`text-base md:text-lg leading-snug flex-1 ${
+                                    isActive ? "font-heading font-black text-black tracking-tight" : "font-body"
+                                  }`}
+                                >
+                                  {line.text}
+                                </span>
+
+                                {/* Active marker indicator */}
+                                {isActive && (
+                                  <span className="font-mono text-xs px-2 py-0.5 bg-black text-yellow-300 font-bold border border-black animate-pulse flex-shrink-0">
+                                    NOW
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        /* Full Text Plain Lyrics View */
+                        <div className="whitespace-pre-line font-body text-base md:text-lg leading-relaxed text-brutal-black/90 dark:text-brutal-white/90 p-3 bg-white/70 dark:bg-black/30 border-2 border-brutal-black/30 dark:border-brutal-white/20 shadow-inner">
+                          {lyricsData.plainLyrics ||
+                            lyricsData.lines?.map((l) => l.text).join("\n") ||
+                            "Tidak ada teks."}
+                        </div>
+                      )
+                    ) : (
+                      /* Not Found State with search shortcut */
+                      <div className="py-10 text-center space-y-4">
+                        <span className="text-4xl block">📼</span>
+                        <div>
+                          <p className="font-heading font-black text-lg text-brutal-black dark:text-brutal-white">
+                            {isEnglish ? "LYRICS NOT FOUND IN VAULT" : "LIRIK BELUM DITEMUKAN"}
+                          </p>
+                          <p className="font-mono text-xs text-brutal-black/60 dark:text-white/60 mt-1 max-w-md mx-auto">
+                            {isEnglish
+                              ? `No official lyrics record found for "${displayTrack?.name || "this track"}". Enjoy the melody or search external libraries!`
+                              : `Belum ada arsip lirik untuk lagu "${displayTrack?.name || "lagu ini"}". Nikmati melodinya atau cari di platform eksternal!`}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-center gap-3 flex-wrap pt-2">
+                          <a
+                            href={`https://genius.com/search?q=${encodeURIComponent(
+                              `${displayTrack?.name || ""} ${displayTrack?.artist || ""}`
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 border-2 border-brutal-black dark:border-brutal-white bg-brutal-yellow text-brutal-black font-mono text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_#1A1A2E] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[2px] active:translate-y-[2px] transition-all flex items-center gap-1.5"
+                          >
+                            <span>GENIUS ↗</span>
+                          </a>
+                          <a
+                            href={`https://www.google.com/search?q=${encodeURIComponent(
+                              `lyrics ${displayTrack?.name || ""} ${displayTrack?.artist || ""}`
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 border-2 border-brutal-black dark:border-brutal-white bg-white dark:bg-brutal-dark-surface text-brutal-black dark:text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[3px_3px_0px_#1A1A2E] dark:shadow-[3px_3px_0px_#FAFAF9] hover:bg-gray-100 transition-all flex items-center gap-1.5"
+                          >
+                            <span>GOOGLE ↗</span>
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Cassette Footer Strip */}
+                  <div className="p-3 bg-brutal-black text-white dark:bg-[#111118] border-t-2 border-brutal-black dark:border-brutal-white flex items-center justify-between text-[11px] font-mono flex-wrap gap-2">
+                    <div className="flex items-center gap-2 text-white/70">
+                      <span className="text-[#1DB954]">●</span>
+                      <span>LRCLIB OPEN LYRICS DATABASE</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-white/50">
+                        {lyricsData?.isSynced
+                          ? isEnglish ? "SYNCED TIME-STAMPED" : "LIRIK WAKTU TERSINKRON"
+                          : isEnglish ? "PLAIN LYRICS" : "TEKS BIASA"}
+                      </span>
+                      <button
+                        onClick={() => setShowLyrics(false)}
+                        className="text-brutal-yellow hover:underline cursor-pointer font-bold"
+                      >
+                        [{isEnglish ? "CLOSE" : "TUTUP"}]
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -336,3 +819,4 @@ export default function SpotifyWidget() {
     </section>
   );
 }
+
