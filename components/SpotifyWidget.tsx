@@ -235,8 +235,8 @@ export default function SpotifyWidget() {
               </div>
             </div>
 
-            {/* Middle Row: Animated Equalizer Bar Visualizer */}
-            <div className="pt-2 border-t-2 border-dashed border-brutal-black/15 dark:border-brutal-white/15 flex items-center justify-between gap-3">
+            {/* Animated Equalizer Bar Visualizer */}
+            <div className="pt-2.5 border-t-2 border-dashed border-brutal-black/15 dark:border-brutal-white/15 flex items-center justify-between gap-3">
               <div className="h-5 flex items-end gap-1 flex-1 overflow-hidden">
                 {[55, 90, 45, 100, 70, 35, 85, 60, 40, 95, 75, 50, 85, 65, 40, 90, 60, 80].map((h, i) => (
                   <span
@@ -252,26 +252,17 @@ export default function SpotifyWidget() {
                 ))}
               </div>
 
-              <span className="font-mono text-[10px] font-bold text-brutal-black/60 dark:text-white/50 tracking-wider uppercase">
-                {isPlaying ? "LIVE FEED" : "STANDBY"}
-              </span>
+              <a
+                href={displayTrack.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[10px] font-bold text-brutal-black/60 dark:text-white/50 hover:text-[#1DB954] dark:hover:text-[#1DB954] tracking-wider uppercase flex items-center gap-1 transition-colors"
+                title="Open on Spotify"
+              >
+                <span>{isPlaying ? "LIVE FEED" : "STANDBY"}</span>
+                <span className="text-[10px]">↗</span>
+              </a>
             </div>
-
-            {/* Bottom Row: Spotify CTA Button */}
-            <a
-              href={displayTrack.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-between px-3.5 py-2 border-2 border-brutal-black dark:border-brutal-white bg-[#1DB954] text-black font-mono font-bold text-xs shadow-[3px_3px_0px_#1A1A2E] dark:shadow-[3px_3px_0px_#FAFAF9] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#1A1A2E] dark:hover:shadow-[4px_4px_0px_#FAFAF9] active:translate-x-[1px] active:translate-y-[1px] transition-all cursor-pointer select-none"
-            >
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                </svg>
-                <span>{isEnglish ? "Listen on Spotify" : "Dengarkan di Spotify"}</span>
-              </div>
-              <span className="font-bold text-sm">↗</span>
-            </a>
           </div>
         ) : (
           <div className="py-4 text-center">
