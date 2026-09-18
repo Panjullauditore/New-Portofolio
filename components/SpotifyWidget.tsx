@@ -165,38 +165,38 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
             <div className="flex flex-col gap-2.5">
               {/* Track Row: Dedicated space for vinyl & cover, ensuring ZERO overlap with text */}
               <div className="flex items-center gap-3">
-                {/* Left Column: Dedicated Vinyl + Cover Box (Width 74px ensures vinyl disc NEVER covers text) */}
-                <div className="relative flex-shrink-0 w-[74px] h-[52px]">
-                  {/* Vinyl Record Disc (Slides out inside dedicated 74px box) */}
+                {/* Left Column: Dedicated Vinyl + Cover Box with rich hover micro-interaction */}
+                <div className="relative flex-shrink-0 w-[76px] h-[52px] group/album cursor-pointer">
+                  {/* Vinyl Record Disc (Slides out and spins faster on album hover) */}
                   <div
-                    className={`absolute top-1/2 -translate-y-1/2 left-3 w-12 h-12 rounded-full bg-[#111111] border border-black dark:border-white/30 shadow-xs flex items-center justify-center pointer-events-none transition-all duration-300 ${
+                    className={`absolute top-1/2 -translate-y-1/2 left-3 w-12 h-12 rounded-full bg-[#111111] border border-black dark:border-white/30 shadow-xs flex items-center justify-center pointer-events-none transition-all duration-300 ease-out ${
                       isPlaying
-                        ? "translate-x-3.5 animate-[spin_4s_linear_infinite]"
-                        : "translate-x-1"
+                        ? "translate-x-3.5 group-hover/album:translate-x-5 animate-[spin_4s_linear_infinite] group-hover/album:animate-[spin_1.8s_linear_infinite]"
+                        : "translate-x-1 group-hover/album:translate-x-4.5 group-hover/album:animate-[spin_3s_linear_infinite]"
                     }`}
                     style={{
                       backgroundImage:
                         "radial-gradient(circle, #1a1a1a 18%, #111111 20%, #2b2b2b 40%, #111111 42%, #222222 80%, #0d0d0d 100%)",
                     }}
                   >
-                    <div className="w-4 h-4 rounded-full bg-[#1DB954] border border-black flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full bg-[#1DB954] border border-black flex items-center justify-center transition-transform duration-200 group-hover/album:scale-110">
                       <div className="w-1 h-1 rounded-full bg-black" />
                     </div>
                   </div>
 
-                  {/* Album Cover Art */}
+                  {/* Album Cover Art (Lifts, tilts, glints with light sheen, and shows mini play icon) */}
                   <a
                     href={displayTrack.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute top-0 left-0 z-10 block w-[52px] h-[52px] border-2 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[2px_2px_0px_#1A1A2E] dark:shadow-[2px_2px_0px_#FAFAF9] overflow-hidden"
+                    className="absolute top-0 left-0 z-10 block w-[52px] h-[52px] border-2 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[2px_2px_0px_#1A1A2E] dark:shadow-[2px_2px_0px_#FAFAF9] group-hover/album:shadow-[4px_4px_0px_#1DB954] dark:group-hover/album:shadow-[4px_4px_0px_#1DB954] group-hover/album:-translate-y-1 group-hover/album:-translate-x-0.5 group-hover/album:rotate-[-2deg] transition-all duration-200 ease-out overflow-hidden"
                     title={displayTrack.name}
                   >
                     {displayTrack.albumArt ? (
                       <img
                         src={displayTrack.albumArt}
                         alt={displayTrack.album || displayTrack.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover/album:scale-110 transition-transform duration-300"
                         onError={(e) => {
                           (e.currentTarget as HTMLElement).style.display = "none";
                         }}
@@ -204,6 +204,16 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
                     ) : (
                       <span className="text-xl w-full h-full flex items-center justify-center">🎵</span>
                     )}
+
+                    {/* Diagonal light sweep sheen on hover */}
+                    <div className="absolute inset-0 -translate-x-full group-hover/album:translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 pointer-events-none" />
+
+                    {/* Spotify green play overlay on hover */}
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px] opacity-0 group-hover/album:opacity-100 transition-all duration-200 flex items-center justify-center pointer-events-none">
+                      <span className="w-5 h-5 rounded-full bg-[#1DB954] text-black flex items-center justify-center text-[9px] font-black pl-0.5 shadow-sm transform scale-75 group-hover/album:scale-100 transition-transform duration-200">
+                        ▶
+                      </span>
+                    </div>
                   </a>
                 </div>
 
