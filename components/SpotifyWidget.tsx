@@ -10,17 +10,36 @@ interface SpotifyTrack {
   albumArt: string;
   url: string;
   isPlaying: boolean;
+  timestamp?: number;
 }
 
 interface SpotifyWidgetProps {
   className?: string;
 }
 
+const CACHE_KEY = "portfolio_last_spotify_track";
+
 export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
   const { isEnglish } = useLanguage();
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  // 1. Immediately restore last known track from localStorage on mount (zero flicker on refresh)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CACHE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name) {
+          setTrack({ ...parsed, isPlaying: false });
+          setIsLoading(false);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -33,7 +52,39 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
         });
         if (res.ok) {
           const data: SpotifyTrack = await res.json();
-          setTrack(data);
+          const serverTime = data.timestamp || 0;
+
+          // Retrieve client's saved track
+          let savedTrack: SpotifyTrack | null = null;
+          try {
+            const raw = localStorage.getItem(CACHE_KEY);
+            if (raw) savedTrack = JSON.parse(raw);
+          } catch {}
+
+          if (data.isPlaying) {
+            // Live playing: always update cache and show live state
+            const toSave: SpotifyTrack = { ...data, timestamp: Date.now() };
+            try {
+              localStorage.setItem(CACHE_KEY, JSON.stringify(toSave));
+            } catch {}
+            setTrack(data);
+          } else {
+            // Offline / Paused:
+            // If the user was playing a song more recently than the server's scrobble time, retain that paused song!
+            if (savedTrack && (savedTrack.timestamp || 0) > serverTime) {
+              setTrack({
+                ...savedTrack,
+                isPlaying: false,
+              });
+            } else {
+              // Server's scrobble is genuinely newer
+              const toSave: SpotifyTrack = { ...data, timestamp: serverTime || Date.now() };
+              try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(toSave));
+              } catch {}
+              setTrack(data);
+            }
+          }
           setError(false);
         } else {
           setError(true);

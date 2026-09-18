@@ -11,6 +11,11 @@ const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const REFRESH_TOKEN = process.env.SPOTIFY_REFRESH_TOKEN;
 
+declare global {
+  // eslint-disable-next-line no-var
+  var __lastActiveSpotifyTrack: (TrackData & { timestamp: number }) | undefined;
+}
+
 interface TrackData {
   name: string;
   artist: string;
@@ -20,6 +25,7 @@ interface TrackData {
   isPlaying: boolean;
   duration?: number;
   progress?: number;
+  timestamp?: number;
 }
 
 const DEFAULT_TRACK: TrackData = {
@@ -97,16 +103,48 @@ async function getLastFmTrack(): Promise<TrackData | null> {
       ? item.url
       : `https://open.spotify.com/search/${encodeURIComponent(`${name} ${artist}`)}`;
 
-    return {
+    const scrobbleUts = item.date?.uts ? parseInt(item.date.uts, 10) * 1000 : 0;
+
+    if (isPlaying) {
+      const activeTrack: TrackData & { timestamp: number } = {
+        name,
+        artist,
+        album,
+        albumArt,
+        url: trackUrl,
+        isPlaying: true,
+        duration: 215000,
+        progress: 35000,
+        timestamp: Date.now(),
+      };
+      globalThis.__lastActiveSpotifyTrack = activeTrack;
+      return activeTrack;
+    }
+
+    // When paused/offline: Last.fm drops uncompleted nowplaying tracks and falls back to previous scrobbles.
+    // If we have a retained active track that played more recently than this scrobble, keep it as OFFLINE!
+    const cached = globalThis.__lastActiveSpotifyTrack;
+    if (cached && cached.timestamp > scrobbleUts) {
+      return {
+        ...cached,
+        isPlaying: false,
+      };
+    }
+
+    // Otherwise, the incoming scrobble is newer or we don't have a cached track
+    const offlineTrack: TrackData & { timestamp: number } = {
       name,
       artist,
       album,
       albumArt,
       url: trackUrl,
-      isPlaying,
+      isPlaying: false,
       duration: 215000,
-      progress: isPlaying ? 35000 : 0,
+      progress: 0,
+      timestamp: scrobbleUts || Date.now(),
     };
+    globalThis.__lastActiveSpotifyTrack = offlineTrack;
+    return offlineTrack;
   } catch {
     return null;
   }
@@ -144,16 +182,22 @@ async function getSpotifyTrack(): Promise<TrackData | null> {
     if (nowPlayingRes.status === 200) {
       const data = await nowPlayingRes.json();
       if (data.item) {
-        return {
+        const isPlaying = data.is_playing;
+        const track: TrackData & { timestamp: number } = {
           name: data.item.name,
           artist: data.item.artists.map((a: { name: string }) => a.name).join(", "),
           album: data.item.album.name,
           albumArt: data.item.album.images[0]?.url || "",
           url: data.item.external_urls.spotify,
-          isPlaying: data.is_playing,
+          isPlaying,
           progress: data.progress_ms,
           duration: data.item.duration_ms,
+          timestamp: Date.now(),
         };
+        if (isPlaying) {
+          globalThis.__lastActiveSpotifyTrack = track;
+        }
+        return track;
       }
     }
   } catch {
@@ -182,6 +226,10 @@ export async function GET() {
     return NextResponse.json(spotifyTrack, { headers: noCacheHeaders });
   }
 
-  // Priority 3: Fallback track
+  // Priority 3: Retained cache or Fallback track
+  if (globalThis.__lastActiveSpotifyTrack) {
+    return NextResponse.json({ ...globalThis.__lastActiveSpotifyTrack, isPlaying: false }, { headers: noCacheHeaders });
+  }
+
   return NextResponse.json(DEFAULT_TRACK, { headers: noCacheHeaders });
 }
