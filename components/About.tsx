@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { profile } from "@/data/profile";
-import SpotifyWidget from "./SpotifyWidget";
 
 export default function About() {
   const { t } = useLanguage();
@@ -116,9 +115,6 @@ export default function About() {
               </div>
             </div>
           </div>
-
-          {/* Spotify Widget inside About Me */}
-          <SpotifyWidget />
         </div>
       </div>
     </section>
