@@ -40,5 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# editor
+.vscode/
+
 # next.js agent files
 AGENTS.md
