@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -40,38 +38,12 @@ declare global {
   var __lastSpotifyActiveTrack: TrackData | undefined;
 }
 
-function getCacheFilePath(): string {
-  return path.join(process.cwd(), "data", "spotify-cache.json");
-}
-
 function getSavedTrack(): TrackData {
-  if (globalThis.__lastSpotifyActiveTrack) {
-    return globalThis.__lastSpotifyActiveTrack;
-  }
-  try {
-    const filePath = getCacheFilePath();
-    if (fs.existsSync(filePath)) {
-      const raw = fs.readFileSync(filePath, "utf-8");
-      const parsed = JSON.parse(raw);
-      if (parsed?.name) {
-        globalThis.__lastSpotifyActiveTrack = parsed;
-        return parsed;
-      }
-    }
-  } catch {
-    // ignore
-  }
-  return DEFAULT_TRACK;
+  return globalThis.__lastSpotifyActiveTrack || DEFAULT_TRACK;
 }
 
 function saveTrack(track: TrackData) {
   globalThis.__lastSpotifyActiveTrack = track;
-  try {
-    const filePath = getCacheFilePath();
-    fs.writeFileSync(filePath, JSON.stringify(track, null, 2), "utf-8");
-  } catch {
-    // ignore
-  }
 }
 
 // Helper to fetch HD album art from iTunes search if Last.fm image is missing
