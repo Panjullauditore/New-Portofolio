@@ -22,23 +22,6 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const lastActiveTrackRef = useRef<(SpotifyTrack & { savedAt?: number }) | null>(null);
-
-  // Initialize cached active track from localStorage
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("last_active_spotify_track");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === "object") {
-          lastActiveTrackRef.current = parsed;
-        }
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
   useEffect(() => {
     const fetchTrack = async () => {
       try {
@@ -50,25 +33,7 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
         });
         if (res.ok) {
           const data: SpotifyTrack = await res.json();
-          if (data.isPlaying) {
-            const trackedObj = { ...data, savedAt: Date.now() };
-            lastActiveTrackRef.current = trackedObj;
-            try {
-              localStorage.setItem("last_active_spotify_track", JSON.stringify(trackedObj));
-            } catch {
-              // ignore
-            }
-            setTrack(data);
-          } else {
-            setTrack(data);
-            const trackedObj = { ...data, isPlaying: false };
-            lastActiveTrackRef.current = trackedObj;
-            try {
-              localStorage.setItem("last_active_spotify_track", JSON.stringify(trackedObj));
-            } catch {
-              // ignore
-            }
-          }
+          setTrack(data);
           setError(false);
         } else {
           setError(true);

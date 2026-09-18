@@ -20,31 +20,16 @@ interface TrackData {
   isPlaying: boolean;
   duration?: number;
   progress?: number;
-  savedAt?: number;
 }
 
 const DEFAULT_TRACK: TrackData = {
-  name: "Hälla",
-  artist: "Crawla",
-  album: "Paranoia",
-  albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/28/ba/3e/28ba3ea6-ebe0-eb05-6ca4-fcef65c31bc6/859734605506_cover.jpg/600x600bb.jpg",
-  url: "https://open.spotify.com/search/H%C3%A4lla%20Crawla",
+  name: "ANTHEM JAWIR",
+  artist: "Tenxi",
+  album: "Liga Besar",
+  albumArt: "https://lastfm-img.freetls.fastly.net/i/u/300x300/b5cbc16f6001a599752e323287e30ab9.jpg",
+  url: "https://open.spotify.com/search/ANTHEM%20JAWIR%20Tenxi",
   isPlaying: false,
-  savedAt: 1789725000000,
 };
-
-declare global {
-  // eslint-disable-next-line no-var
-  var __lastSpotifyActiveTrack: TrackData | undefined;
-}
-
-function getSavedTrack(): TrackData {
-  return globalThis.__lastSpotifyActiveTrack || DEFAULT_TRACK;
-}
-
-function saveTrack(track: TrackData) {
-  globalThis.__lastSpotifyActiveTrack = track;
-}
 
 // Helper to fetch HD album art from iTunes search if Last.fm image is missing
 async function getAlbumArt(trackName: string, artistName: string): Promise<string> {
@@ -72,7 +57,7 @@ async function getLastFmTrack(): Promise<TrackData | null> {
   try {
     const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(
       LASTFM_USERNAME
-    )}&api_key=${LASTFM_API_KEY}&format=json&limit=2`;
+    )}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
 
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) return null;
@@ -85,7 +70,6 @@ async function getLastFmTrack(): Promise<TrackData | null> {
 
     const item = Array.isArray(trackList) ? trackList[0] : trackList;
     const isPlaying = item["@attr"]?.nowplaying === "true";
-    const scrobbleUts = item.date?.uts ? parseInt(item.date.uts, 10) * 1000 : 0;
     const name = item.name;
     const artist =
       typeof item.artist === "object"
@@ -113,51 +97,15 @@ async function getLastFmTrack(): Promise<TrackData | null> {
       ? item.url
       : `https://open.spotify.com/search/${encodeURIComponent(`${name} ${artist}`)}`;
 
-    const currentSaved = getSavedTrack();
-
-    // CASE 1: Song is actively playing right now
-    if (isPlaying) {
-      const activeTrack: TrackData = {
-        name,
-        artist,
-        album,
-        albumArt,
-        url: trackUrl,
-        isPlaying: true,
-        duration: 215000,
-        progress: 35000,
-        savedAt: Date.now(),
-      };
-      saveTrack(activeTrack);
-      return activeTrack;
-    }
-
-    // CASE 2: Paused / Stopped
-    // Check if Last.fm's most recent scrobble is newer than our recorded active track.
-    // If user scrobbled a NEW track (scrobbleUts > savedAt), that becomes the last track.
-    // Otherwise, the user played `currentSaved` more recently and paused it, so retain it.
-    const isNewerScrobble = scrobbleUts > (currentSaved.savedAt || 0);
-
-    if (isNewerScrobble) {
-      const newScrobble: TrackData = {
-        name,
-        artist,
-        album,
-        albumArt,
-        url: trackUrl,
-        isPlaying: false,
-        duration: 215000,
-        progress: 0,
-        savedAt: scrobbleUts,
-      };
-      saveTrack(newScrobble);
-      return newScrobble;
-    }
-
-    // Retain the paused track indefinitely
     return {
-      ...currentSaved,
-      isPlaying: false,
+      name,
+      artist,
+      album,
+      albumArt,
+      url: trackUrl,
+      isPlaying,
+      duration: 215000,
+      progress: isPlaying ? 35000 : 0,
     };
   } catch {
     return null;
@@ -196,7 +144,7 @@ async function getSpotifyTrack(): Promise<TrackData | null> {
     if (nowPlayingRes.status === 200) {
       const data = await nowPlayingRes.json();
       if (data.item) {
-        const spotTrack: TrackData = {
+        return {
           name: data.item.name,
           artist: data.item.artists.map((a: { name: string }) => a.name).join(", "),
           album: data.item.album.name,
@@ -205,12 +153,7 @@ async function getSpotifyTrack(): Promise<TrackData | null> {
           isPlaying: data.is_playing,
           progress: data.progress_ms,
           duration: data.item.duration_ms,
-          savedAt: Date.now(),
         };
-        if (data.is_playing) {
-          saveTrack(spotTrack);
-        }
-        return spotTrack;
       }
     }
   } catch {
@@ -239,7 +182,6 @@ export async function GET() {
     return NextResponse.json(spotifyTrack, { headers: noCacheHeaders });
   }
 
-  // Priority 3: Fallback to persistent saved track
-  return NextResponse.json(getSavedTrack(), { headers: noCacheHeaders });
+  // Priority 3: Fallback track
+  return NextResponse.json(DEFAULT_TRACK, { headers: noCacheHeaders });
 }
-
