@@ -149,7 +149,7 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
                   isPlaying ? "bg-[#1DB954] animate-ping" : "bg-neutral-400"
                 }`}
               />
-              <span>{isPlaying ? "NOW PLAYING" : "STANDBY"}</span>
+              <span>{isPlaying ? "NOW PLAYING" : "OFFLINE"}</span>
             </span>
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
                   className="font-mono text-[9px] font-bold text-brutal-black/60 dark:text-white/50 hover:text-[#1DB954] dark:hover:text-[#1DB954] tracking-wider uppercase flex items-center gap-0.5 transition-colors"
                   title="Open in Spotify"
                 >
-                  <span>{isPlaying ? "LIVE FEED" : "STANDBY"}</span>
+                  <span>{isPlaying ? "LIVE FEED" : "OFFLINE"}</span>
                   <span className="text-[9px]">↗</span>
                 </a>
               </div>
