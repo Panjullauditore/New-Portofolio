@@ -25,10 +25,13 @@ export default function Home() {
 
       <Experience />
 
-      {/* Spotify Widget between Experience and Contact */}
-      <SpotifyWidget />
+      {/* Divider */}
+      <div className="w-full border-t-3 border-brutal-black dark:border-brutal-white" />
 
       <Contact />
+
+      {/* Floating Spotify Mini-Bar */}
+      <SpotifyWidget />
     </main>
   );
 }
