@@ -4,6 +4,7 @@ import { profile } from "@/data/profile";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { smoothScrollToSection } from "@/utils/scroll";
+import SpotifyWidget from "@/components/SpotifyWidget";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -143,6 +144,11 @@ export default function Hero() {
             </a>
           </div>
 
+          {/* Mobile Spotify Deck (renders cleanly below buttons on mobile) */}
+          <div className="mt-8 lg:hidden flex justify-start">
+            <SpotifyWidget />
+          </div>
+
           {/* Scroll indicator */}
           <a
             href="#about"
@@ -155,6 +161,11 @@ export default function Hero() {
             <span className="font-mono text-sm font-semibold">{t.hero.scrollDown}</span>
           </a>
         </div>
+      </div>
+
+      {/* Desktop Spotify Deck - Attached Permanently at Bottom-Right of Hero */}
+      <div className="hidden lg:block absolute bottom-6 right-6 lg:right-8 xl:right-10 z-20">
+        <SpotifyWidget />
       </div>
     </section>
   );

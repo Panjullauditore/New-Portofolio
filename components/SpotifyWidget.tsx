@@ -12,12 +12,15 @@ interface SpotifyTrack {
   isPlaying: boolean;
 }
 
-export default function SpotifyWidget() {
+interface SpotifyWidgetProps {
+  className?: string;
+}
+
+export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
   const { isEnglish } = useLanguage();
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
 
   const lastActiveTrackRef = useRef<(SpotifyTrack & { savedAt?: number }) | null>(null);
 
@@ -116,213 +119,160 @@ export default function SpotifyWidget() {
   const isPlaying = displayTrack?.isPlaying || false;
 
   return (
-    <aside
+    <div
       aria-label="Spotify Player"
-      className="fixed bottom-4 right-4 md:bottom-5 md:right-5 z-40 select-none pointer-events-auto"
+      className={`select-none pointer-events-auto ${className}`}
     >
-      {isMinimized ? (
-        /* Minimized Pill Badge */
-        <div
-          onClick={() => setIsMinimized(false)}
-          className="flex items-center gap-2 py-1 px-2.5 border-2 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-card shadow-[3px_3px_0px_#1A1A2E] dark:shadow-[3px_3px_0px_#FAFAF9] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#1A1A2E] dark:hover:shadow-[4px_4px_0px_#FAFAF9] transition-all cursor-pointer max-w-[210px] sm:max-w-[230px]"
-          title="Click to expand player"
-        >
-          {/* 24px Cover Art */}
-          <div className="relative flex-shrink-0 w-6 h-6 border border-brutal-black dark:border-brutal-white bg-brutal-yellow overflow-hidden">
-            {displayTrack?.albumArt ? (
-              <img
-                src={displayTrack.albumArt}
-                alt={displayTrack?.name || "Track"}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.currentTarget as HTMLElement).style.display = "none";
-                }}
-              />
-            ) : (
-              <span className="text-[10px] w-full h-full flex items-center justify-center">🎵</span>
-            )}
+      {/* Compact Deck Card (Clean, Sleek, Zero Text Overlap) */}
+      <div className="w-[285px] sm:w-[315px] border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-card shadow-[4px_4px_0px_#1A1A2E] dark:shadow-[4px_4px_0px_#FAFAF9] overflow-hidden transition-all">
+        {/* Header Bar */}
+        <div className="bg-brutal-black dark:bg-[#111118] text-white px-3 py-1.5 border-b-2 border-brutal-black dark:border-brutal-white flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-brutal-red inline-block" />
+            <span className="w-2 h-2 rounded-full bg-brutal-yellow inline-block" />
+            <span className="w-2 h-2 rounded-full bg-brutal-green inline-block" />
+            <span className="font-mono text-[10px] font-bold text-white/90 ml-1 tracking-wider">
+              SPOTIFY // DECK
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
             <span
-              className={`absolute top-0 right-0 w-1.5 h-1.5 rounded-full ${
-                isPlaying ? "bg-[#1DB954] ring-1 ring-black" : "bg-neutral-400"
+              className={`font-mono text-[9px] font-bold px-1.5 py-0.2 rounded-xs border flex items-center gap-1 ${
+                isPlaying
+                  ? "border-[#1DB954] text-[#1DB954] bg-[#1DB954]/15"
+                  : "border-white/30 text-white/60 bg-white/5"
               }`}
-            />
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <p className="font-heading font-black text-[11px] text-brutal-black dark:text-brutal-white truncate leading-none">
-              {displayTrack?.name || "Spotify"}
-            </p>
-            <p className="font-mono text-[9px] text-brutal-black/60 dark:text-white/60 truncate leading-tight mt-0.5">
-              {displayTrack?.artist || "Player"}
-            </p>
-          </div>
-
-          <span className="font-mono text-[10px] text-brutal-black/60 dark:text-white/60 pl-1 border-l border-brutal-black/15 dark:border-brutal-white/15">
-            ▲
-          </span>
-        </div>
-      ) : (
-        /* Compact Deck Card (Clean, Sleek, Zero Text Overlap) */
-        <div className="w-[285px] sm:w-[315px] border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-card shadow-[4px_4px_0px_#1A1A2E] dark:shadow-[4px_4px_0px_#FAFAF9] overflow-hidden transition-all animate-in fade-in slide-in-from-bottom-2 duration-200">
-          {/* Header Bar */}
-          <div className="bg-brutal-black dark:bg-[#111118] text-white px-3 py-1.5 border-b-2 border-brutal-black dark:border-brutal-white flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-brutal-red inline-block" />
-              <span className="w-2 h-2 rounded-full bg-brutal-yellow inline-block" />
-              <span className="w-2 h-2 rounded-full bg-brutal-green inline-block" />
-              <span className="font-mono text-[10px] font-bold text-white/90 ml-1 tracking-wider">
-                SPOTIFY // DECK
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
+            >
               <span
-                className={`font-mono text-[9px] font-bold px-1.5 py-0.2 rounded-xs border flex items-center gap-1 ${
-                  isPlaying
-                    ? "border-[#1DB954] text-[#1DB954] bg-[#1DB954]/15"
-                    : "border-white/30 text-white/60 bg-white/5"
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isPlaying ? "bg-[#1DB954] animate-ping" : "bg-neutral-400"
                 }`}
-              >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    isPlaying ? "bg-[#1DB954] animate-ping" : "bg-neutral-400"
-                  }`}
-                />
-                <span>{isPlaying ? "NOW PLAYING" : "STANDBY"}</span>
-              </span>
-
-              {/* Minimize button */}
-              <button
-                onClick={() => setIsMinimized(true)}
-                className="w-4 h-4 flex items-center justify-center font-mono text-[11px] font-black text-white/70 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
-                title="Minimize player"
-                aria-label="Minimize player"
-              >
-                ✕
-              </button>
-            </div>
+              />
+              <span>{isPlaying ? "NOW PLAYING" : "STANDBY"}</span>
+            </span>
           </div>
+        </div>
 
-          {/* Body */}
-          <div className="p-3">
-            {isLoading && !displayTrack ? (
-              <div className="space-y-2 animate-pulse">
-                <div className="h-14 bg-neutral-200 dark:bg-neutral-800" />
-                <div className="h-3 bg-neutral-200 dark:bg-neutral-800 w-2/3" />
-              </div>
-            ) : displayTrack ? (
-              <div className="flex flex-col gap-2.5">
-                {/* Track Row: Dedicated space for vinyl & cover, ensuring ZERO overlap with text */}
-                <div className="flex items-center gap-3">
-                  {/* Left Column: Dedicated Vinyl + Cover Box (Width 76px ensures vinyl disc NEVER covers text) */}
-                  <div className="relative flex-shrink-0 w-[74px] h-[52px]">
-                    {/* Vinyl Record Disc (Slides out inside dedicated 74px box) */}
-                    <div
-                      className={`absolute top-1/2 -translate-y-1/2 left-3 w-12 h-12 rounded-full bg-[#111111] border border-black dark:border-white/30 shadow-xs flex items-center justify-center pointer-events-none transition-all duration-300 ${
-                        isPlaying
-                          ? "translate-x-3.5 animate-[spin_4s_linear_infinite]"
-                          : "translate-x-1"
-                      }`}
-                      style={{
-                        backgroundImage:
-                          "radial-gradient(circle, #1a1a1a 18%, #111111 20%, #2b2b2b 40%, #111111 42%, #222222 80%, #0d0d0d 100%)",
-                      }}
-                    >
-                      <div className="w-4 h-4 rounded-full bg-[#1DB954] border border-black flex items-center justify-center">
-                        <div className="w-1 h-1 rounded-full bg-black" />
-                      </div>
+        {/* Body */}
+        <div className="p-3">
+          {isLoading && !displayTrack ? (
+            <div className="space-y-2 animate-pulse">
+              <div className="h-14 bg-neutral-200 dark:bg-neutral-800" />
+              <div className="h-3 bg-neutral-200 dark:bg-neutral-800 w-2/3" />
+            </div>
+          ) : displayTrack ? (
+            <div className="flex flex-col gap-2.5">
+              {/* Track Row: Dedicated space for vinyl & cover, ensuring ZERO overlap with text */}
+              <div className="flex items-center gap-3">
+                {/* Left Column: Dedicated Vinyl + Cover Box (Width 74px ensures vinyl disc NEVER covers text) */}
+                <div className="relative flex-shrink-0 w-[74px] h-[52px]">
+                  {/* Vinyl Record Disc (Slides out inside dedicated 74px box) */}
+                  <div
+                    className={`absolute top-1/2 -translate-y-1/2 left-3 w-12 h-12 rounded-full bg-[#111111] border border-black dark:border-white/30 shadow-xs flex items-center justify-center pointer-events-none transition-all duration-300 ${
+                      isPlaying
+                        ? "translate-x-3.5 animate-[spin_4s_linear_infinite]"
+                        : "translate-x-1"
+                    }`}
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle, #1a1a1a 18%, #111111 20%, #2b2b2b 40%, #111111 42%, #222222 80%, #0d0d0d 100%)",
+                    }}
+                  >
+                    <div className="w-4 h-4 rounded-full bg-[#1DB954] border border-black flex items-center justify-center">
+                      <div className="w-1 h-1 rounded-full bg-black" />
                     </div>
-
-                    {/* Album Cover Art */}
-                    <a
-                      href={displayTrack.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute top-0 left-0 z-10 block w-[52px] h-[52px] border-2 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[2px_2px_0px_#1A1A2E] dark:shadow-[2px_2px_0px_#FAFAF9] overflow-hidden"
-                      title={displayTrack.name}
-                    >
-                      {displayTrack.albumArt ? (
-                        <img
-                          src={displayTrack.albumArt}
-                          alt={displayTrack.album || displayTrack.name}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.currentTarget as HTMLElement).style.display = "none";
-                          }}
-                        />
-                      ) : (
-                        <span className="text-xl w-full h-full flex items-center justify-center">🎵</span>
-                      )}
-                    </a>
                   </div>
 
-                  {/* Right Column: Track Details (Fully clear from vinyl disc) */}
-                  <div className="flex-1 min-w-0">
-                    <a
-                      href={displayTrack.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-heading font-black text-xs sm:text-[13px] text-brutal-black dark:text-brutal-white truncate block hover:text-[#1DB954] transition-colors leading-tight"
-                      title={displayTrack.name}
-                    >
-                      {displayTrack.name}
-                    </a>
-
-                    <p
-                      className="font-body font-semibold text-[11px] text-brutal-black/80 dark:text-brutal-white/80 truncate mt-0.5 leading-tight"
-                      title={displayTrack.artist}
-                    >
-                      {displayTrack.artist}
-                    </p>
-
-                    <p
-                      className="font-mono text-[9px] text-brutal-black/50 dark:text-white/40 truncate leading-tight mt-0.5"
-                      title={displayTrack.album}
-                    >
-                      {displayTrack.album}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Bottom Row: Animated Equalizer Bar Visualizer */}
-                <div className="pt-2 border-t border-dashed border-brutal-black/15 dark:border-brutal-white/15 flex items-center justify-between gap-2">
-                  <div className="h-4 flex items-end gap-1 flex-1 overflow-hidden">
-                    {[50, 85, 45, 100, 65, 35, 90, 60, 40, 85, 70, 50, 95, 60, 40].map((h, i) => (
-                      <span
-                        key={i}
-                        className={`w-1 rounded-xs origin-bottom transition-all duration-300 ${
-                          isPlaying ? "bg-[#1DB954] animate-equalizer" : "bg-neutral-400/40"
-                        }`}
-                        style={{
-                          height: isPlaying ? `${h}%` : "20%",
-                          animationDelay: `${(i % 5) * 120}ms`,
-                        }}
-                      />
-                    ))}
-                  </div>
-
+                  {/* Album Cover Art */}
                   <a
                     href={displayTrack.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-[9px] font-bold text-brutal-black/60 dark:text-white/50 hover:text-[#1DB954] dark:hover:text-[#1DB954] tracking-wider uppercase flex items-center gap-0.5 transition-colors"
-                    title="Open in Spotify"
+                    className="absolute top-0 left-0 z-10 block w-[52px] h-[52px] border-2 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[2px_2px_0px_#1A1A2E] dark:shadow-[2px_2px_0px_#FAFAF9] overflow-hidden"
+                    title={displayTrack.name}
                   >
-                    <span>{isPlaying ? "LIVE FEED" : "STANDBY"}</span>
-                    <span className="text-[9px]">↗</span>
+                    {displayTrack.albumArt ? (
+                      <img
+                        src={displayTrack.albumArt}
+                        alt={displayTrack.album || displayTrack.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <span className="text-xl w-full h-full flex items-center justify-center">🎵</span>
+                    )}
                   </a>
                 </div>
+
+                {/* Right Column: Track Details (Fully clear from vinyl disc) */}
+                <div className="flex-1 min-w-0">
+                  <a
+                    href={displayTrack.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-heading font-black text-xs sm:text-[13px] text-brutal-black dark:text-brutal-white truncate block hover:text-[#1DB954] transition-colors leading-tight"
+                    title={displayTrack.name}
+                  >
+                    {displayTrack.name}
+                  </a>
+
+                  <p
+                    className="font-body font-semibold text-[11px] text-brutal-black/80 dark:text-brutal-white/80 truncate mt-0.5 leading-tight"
+                    title={displayTrack.artist}
+                  >
+                    {displayTrack.artist}
+                  </p>
+
+                  <p
+                    className="font-mono text-[9px] text-brutal-black/50 dark:text-white/40 truncate leading-tight mt-0.5"
+                    title={displayTrack.album}
+                  >
+                    {displayTrack.album}
+                  </p>
+                </div>
               </div>
-            ) : (
-              <div className="py-2 text-center">
-                <p className="font-mono text-[10px] text-brutal-black/60 dark:text-white/60">
-                  {isEnglish ? "Spotify data offline" : "Data Spotify offline"}
-                </p>
+
+              {/* Bottom Row: Animated Equalizer Bar Visualizer */}
+              <div className="pt-2 border-t border-dashed border-brutal-black/15 dark:border-brutal-white/15 flex items-center justify-between gap-2">
+                <div className="h-4 flex items-end gap-1 flex-1 overflow-hidden">
+                  {[50, 85, 45, 100, 65, 35, 90, 60, 40, 85, 70, 50, 95, 60, 40].map((h, i) => (
+                    <span
+                      key={i}
+                      className={`w-1 rounded-xs origin-bottom transition-all duration-300 ${
+                        isPlaying ? "bg-[#1DB954] animate-equalizer" : "bg-neutral-400/40"
+                      }`}
+                      style={{
+                        height: isPlaying ? `${h}%` : "20%",
+                        animationDelay: `${(i % 5) * 120}ms`,
+                      }}
+                    />
+                  ))}
+                </div>
+
+                <a
+                  href={displayTrack.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-[9px] font-bold text-brutal-black/60 dark:text-white/50 hover:text-[#1DB954] dark:hover:text-[#1DB954] tracking-wider uppercase flex items-center gap-0.5 transition-colors"
+                  title="Open in Spotify"
+                >
+                  <span>{isPlaying ? "LIVE FEED" : "STANDBY"}</span>
+                  <span className="text-[9px]">↗</span>
+                </a>
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="py-2 text-center">
+              <p className="font-mono text-[10px] text-brutal-black/60 dark:text-white/60">
+                {isEnglish ? "Spotify data offline" : "Data Spotify offline"}
+              </p>
+            </div>
+          )}
         </div>
-      )}
-    </aside>
+      </div>
+    </div>
   );
 }
