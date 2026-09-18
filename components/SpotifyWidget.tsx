@@ -120,11 +120,11 @@ export default function SpotifyWidget() {
 
   // Fallback mock data when API is offline
   const mockTrack: SpotifyTrack = {
-    name: "shawty tjantik",
-    artist: "Kecoud, Crisbe",
-    album: "shawty tjantik (feat. Crisbe) - Single",
-    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/2a/df/ab/2adfab08-6e3a-8344-79ae-c09307176ab2/820200199294.jpg/600x600bb.jpg",
-    url: "https://open.spotify.com/search/shawty%20tjantik%20Kecoud",
+    name: "Hälla",
+    artist: "Crawla",
+    album: "Paranoia",
+    albumArt: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/28/ba/3e/28ba3ea6-ebe0-eb05-6ca4-fcef65c31bc6/859734605506_cover.jpg/600x600bb.jpg",
+    url: "https://open.spotify.com/search/H%C3%A4lla%20Crawla",
     isPlaying: false,
   };
 
