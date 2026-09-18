@@ -4,6 +4,7 @@ import { profile } from "@/data/profile";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { smoothScrollToSection } from "@/utils/scroll";
+import SpotifyWidget from "@/components/SpotifyWidget";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -82,78 +83,98 @@ export default function Hero() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <div
-          className={`transition-all duration-700 ${
+          className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center transition-all duration-700 ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-10"
           }`}
         >
-          {/* Greeting Badge */}
-          <div className="inline-block mb-3.5">
-            <span className="badge-brutal bg-brutal-yellow text-brutal-black text-sm md:text-base px-3.5 py-1.5 shadow-[var(--brutal-shadow-sm)]">
-              {t.hero.greeting}
-            </span>
-          </div>
-
-          {/* Name */}
-          <h1 className="font-heading font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-brutal-black dark:text-brutal-white leading-[0.95] mb-3">
-            {profile.name.split(" ")[0]}
-            <br />
-            <span className="relative inline-block mt-1">
-              {profile.name.split(" ").slice(1).join(" ")}
-              <div className="absolute -bottom-1.5 left-0 w-full h-3 bg-brutal-yellow -z-10" />
-            </span>
-          </h1>
-
-          {/* Typewriter Animated Role */}
-          <div className="min-h-[2.5rem] md:min-h-[3rem] flex items-center mb-4">
-            <p className="font-mono text-xl sm:text-2xl md:text-3xl text-brutal-black dark:text-brutal-white font-bold flex items-center tracking-tight">
-              <span className="text-brutal-black/70 dark:text-brutal-white/70 mr-2">{">"}</span>
-              <span>{displayText}</span>
-              <span className="inline-block w-2.5 sm:w-3 h-6 md:h-8 bg-brutal-red ml-1.5 align-middle animate-pulse" />
-            </p>
-          </div>
-
-          {/* Description */}
-          <p className="font-body text-base sm:text-lg md:text-xl text-brutal-black/80 dark:text-brutal-white/70 max-w-2xl mb-7 leading-relaxed">
-            {t.hero.bio}
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap gap-4">
-            <a
-              href="#projects"
-              onClick={(e) => handleScrollTo(e, "#projects")}
-              className="btn-brutal text-base sm:text-lg px-7 py-3.5 cursor-pointer"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              {t.hero.viewProjects}
-            </a>
-            <a
-              href={`/${profile.cvFileName}`}
-              download
-              className="btn-brutal btn-brutal-secondary text-base sm:text-lg px-7 py-3.5"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              {t.hero.downloadCv}
-            </a>
-          </div>
-
-          {/* Scroll indicator */}
-          <a
-            href="#about"
-            onClick={(e) => handleScrollTo(e, "#about")}
-            className="mt-10 md:mt-12 inline-flex items-center gap-3 text-brutal-black/60 dark:text-brutal-white/40 hover:text-brutal-black dark:hover:text-brutal-white transition-colors cursor-pointer group"
-          >
-            <div className="w-7 h-11 border-3 border-brutal-black/40 dark:border-brutal-white/30 group-hover:border-brutal-black dark:group-hover:border-brutal-white rounded-full flex items-start justify-center p-1.5 transition-colors">
-              <div className="w-1.5 h-2.5 bg-brutal-black/60 dark:bg-brutal-white/50 group-hover:bg-brutal-black dark:group-hover:bg-brutal-white rounded-full animate-bounce" />
+          {/* Left Column: Intro Details & CTA */}
+          <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-center">
+            {/* Greeting Badge */}
+            <div className="inline-block mb-3.5">
+              <span className="badge-brutal bg-brutal-yellow text-brutal-black text-sm md:text-base px-3.5 py-1.5 shadow-[var(--brutal-shadow-sm)]">
+                {t.hero.greeting}
+              </span>
             </div>
-            <span className="font-mono text-sm font-semibold">{t.hero.scrollDown}</span>
-          </a>
+
+            {/* Name */}
+            <h1 className="font-heading font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-brutal-black dark:text-brutal-white leading-[0.95] mb-3">
+              {profile.name.split(" ")[0]}
+              <br />
+              <span className="relative inline-block mt-1">
+                {profile.name.split(" ").slice(1).join(" ")}
+                <div className="absolute -bottom-1.5 left-0 w-full h-3 bg-brutal-yellow -z-10" />
+              </span>
+            </h1>
+
+            {/* Typewriter Animated Role */}
+            <div className="min-h-[2.5rem] md:min-h-[3rem] flex items-center mb-4">
+              <p className="font-mono text-xl sm:text-2xl md:text-3xl text-brutal-black dark:text-brutal-white font-bold flex items-center tracking-tight">
+                <span className="text-brutal-black/70 dark:text-brutal-white/70 mr-2">{">"}</span>
+                <span>{displayText}</span>
+                <span className="inline-block w-2.5 sm:w-3 h-6 md:h-8 bg-brutal-red ml-1.5 align-middle animate-pulse" />
+              </p>
+            </div>
+
+            {/* Description */}
+            <p className="font-body text-base sm:text-lg md:text-xl text-brutal-black/80 dark:text-brutal-white/70 max-w-2xl mb-7 leading-relaxed">
+              {t.hero.bio}
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="#projects"
+                onClick={(e) => handleScrollTo(e, "#projects")}
+                className="btn-brutal text-base sm:text-lg px-7 py-3.5 cursor-pointer"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                {t.hero.viewProjects}
+              </a>
+              <a
+                href={`/${profile.cvFileName}`}
+                download
+                className="btn-brutal btn-brutal-secondary text-base sm:text-lg px-7 py-3.5"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {t.hero.downloadCv}
+              </a>
+            </div>
+
+            {/* Scroll indicator (Desktop) */}
+            <a
+              href="#about"
+              onClick={(e) => handleScrollTo(e, "#about")}
+              className="mt-10 md:mt-12 hidden lg:inline-flex items-center gap-3 text-brutal-black/60 dark:text-brutal-white/40 hover:text-brutal-black dark:hover:text-brutal-white transition-colors cursor-pointer group"
+            >
+              <div className="w-7 h-11 border-3 border-brutal-black/40 dark:border-brutal-white/30 group-hover:border-brutal-black dark:group-hover:border-brutal-white rounded-full flex items-start justify-center p-1.5 transition-colors">
+                <div className="w-1.5 h-2.5 bg-brutal-black/60 dark:bg-brutal-white/50 group-hover:bg-brutal-black dark:group-hover:bg-brutal-white rounded-full animate-bounce" />
+              </div>
+              <span className="font-mono text-sm font-semibold">{t.hero.scrollDown}</span>
+            </a>
+          </div>
+
+          {/* Right Column: Spotify Widget */}
+          <div className="lg:col-span-5 xl:col-span-5 flex flex-col items-center lg:items-end justify-center w-full mt-6 lg:mt-0">
+            <SpotifyWidget />
+
+            {/* Mobile Scroll indicator */}
+            <a
+              href="#about"
+              onClick={(e) => handleScrollTo(e, "#about")}
+              className="mt-8 lg:hidden inline-flex items-center gap-2.5 text-brutal-black/60 dark:text-brutal-white/40 hover:text-brutal-black dark:hover:text-brutal-white transition-colors cursor-pointer group"
+            >
+              <div className="w-6 h-9 border-2 border-brutal-black/40 dark:border-brutal-white/30 group-hover:border-brutal-black dark:group-hover:border-brutal-white rounded-full flex items-start justify-center p-1 transition-colors">
+                <div className="w-1 h-2 bg-brutal-black/60 dark:bg-brutal-white/50 group-hover:bg-brutal-black dark:group-hover:bg-brutal-white rounded-full animate-bounce" />
+              </div>
+              <span className="font-mono text-xs font-semibold">{t.hero.scrollDown}</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
