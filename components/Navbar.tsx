@@ -84,7 +84,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="px-3 py-2 font-heading font-semibold text-sm text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-2 border-transparent hover:border-brutal-black dark:hover:border-brutal-white transition-all cursor-pointer"
+                className="px-3.5 py-2 min-h-[44px] inline-flex items-center font-heading font-semibold text-sm text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-2 border-transparent hover:border-brutal-black dark:hover:border-brutal-white transition-all cursor-pointer"
               >
                 {link.label}
               </a>
@@ -103,7 +103,7 @@ export default function Navbar() {
             <a
               href={`/${profile.cvFileName}`}
               download
-              className="btn-brutal ml-3 text-sm py-2 px-4"
+              className="btn-brutal ml-3 text-sm py-2.5 px-4 min-h-[44px]"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -118,7 +118,7 @@ export default function Navbar() {
             <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="w-10 h-10 flex items-center justify-center border-3 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[var(--brutal-shadow-sm)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all"
+              className="min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center border-3 border-brutal-black dark:border-brutal-white bg-brutal-yellow shadow-[var(--brutal-shadow-sm)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer"
               aria-label="Toggle menu"
             >
               <div className="flex flex-col gap-1.5">
@@ -150,7 +150,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="block px-4 py-3 font-heading font-semibold text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-b-2 border-brutal-black dark:border-brutal-white/30 last:border-b-0 transition-colors cursor-pointer"
+                className="min-h-[44px] flex items-center px-4 py-3 font-heading font-semibold text-brutal-black dark:text-brutal-white hover:bg-brutal-yellow hover:text-brutal-black border-b-2 border-brutal-black dark:border-brutal-white/30 last:border-b-0 transition-colors cursor-pointer"
               >
                 {link.label}
               </a>
@@ -158,7 +158,7 @@ export default function Navbar() {
             <a
               href={`/${profile.cvFileName}`}
               download
-              className="btn-brutal w-full justify-center mt-3 text-sm"
+              className="btn-brutal w-full justify-center mt-3 text-sm min-h-[44px]"
             >
               {t.navbar.downloadCv}
             </a>

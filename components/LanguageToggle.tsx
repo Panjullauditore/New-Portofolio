@@ -13,7 +13,7 @@ export default function LanguageToggle() {
 
   if (!mounted) {
     return (
-      <div className="h-10 px-2.5 border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-surface opacity-0" />
+      <div className="min-h-[44px] h-11 px-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-surface opacity-0" />
     );
   }
 
@@ -22,7 +22,7 @@ export default function LanguageToggle() {
   return (
     <button
       onClick={toggleLanguage}
-      className="h-10 px-2.5 flex items-center gap-1.5 border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-surface shadow-[var(--brutal-shadow-sm)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer group hover:bg-brutal-yellow dark:hover:bg-brutal-yellow dark:hover:text-brutal-black"
+      className="min-h-[44px] h-11 px-3 flex items-center gap-1.5 border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-surface shadow-[var(--brutal-shadow-sm)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer group hover:bg-brutal-yellow dark:hover:bg-brutal-yellow dark:hover:text-brutal-black"
       aria-label={`Switch language. Current: ${isEn ? "English" : "Bahasa Indonesia"}`}
       title={isEn ? "Ganti ke Bahasa Indonesia" : "Switch to English"}
     >

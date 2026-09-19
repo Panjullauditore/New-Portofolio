@@ -211,7 +211,7 @@ export default function Contact() {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="w-full px-4 py-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-cream dark:bg-brutal-dark-surface font-body text-brutal-black dark:text-brutal-white focus:outline-none focus:shadow-[var(--brutal-shadow-sm)] focus:translate-x-[-2px] focus:translate-y-[-2px] transition-all placeholder:text-brutal-black/30 dark:placeholder:text-brutal-white/30"
+                      className="w-full px-4 py-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-cream dark:bg-brutal-dark-surface font-body text-brutal-black dark:text-brutal-white focus:shadow-[var(--brutal-shadow-sm)] focus:translate-x-[-2px] focus:translate-y-[-2px] transition-all placeholder:text-brutal-black/30 dark:placeholder:text-brutal-white/30"
                       placeholder={t.contact.form.namePlaceholder}
                     />
                   </div>
@@ -226,7 +226,7 @@ export default function Contact() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-cream dark:bg-brutal-dark-surface font-body text-brutal-black dark:text-brutal-white focus:outline-none focus:shadow-[var(--brutal-shadow-sm)] focus:translate-x-[-2px] focus:translate-y-[-2px] transition-all placeholder:text-brutal-black/30 dark:placeholder:text-brutal-white/30"
+                      className="w-full px-4 py-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-cream dark:bg-brutal-dark-surface font-body text-brutal-black dark:text-brutal-white focus:shadow-[var(--brutal-shadow-sm)] focus:translate-x-[-2px] focus:translate-y-[-2px] transition-all placeholder:text-brutal-black/30 dark:placeholder:text-brutal-white/30"
                       placeholder={t.contact.form.emailPlaceholder}
                     />
                   </div>
@@ -241,7 +241,7 @@ export default function Contact() {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      className="w-full px-4 py-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-cream dark:bg-brutal-dark-surface font-body text-brutal-black dark:text-brutal-white focus:outline-none focus:shadow-[var(--brutal-shadow-sm)] focus:translate-x-[-2px] focus:translate-y-[-2px] transition-all resize-none placeholder:text-brutal-black/30 dark:placeholder:text-brutal-white/30"
+                      className="w-full px-4 py-3 border-3 border-brutal-black dark:border-brutal-white bg-brutal-cream dark:bg-brutal-dark-surface font-body text-brutal-black dark:text-brutal-white focus:shadow-[var(--brutal-shadow-sm)] focus:translate-x-[-2px] focus:translate-y-[-2px] transition-all resize-none placeholder:text-brutal-black/30 dark:placeholder:text-brutal-white/30"
                       placeholder={t.contact.form.messagePlaceholder}
                     />
                   </div>

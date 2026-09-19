@@ -39,7 +39,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="w-10 h-10 flex items-center justify-center border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-surface shadow-[var(--brutal-shadow-sm)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer group"
+      className="min-w-[44px] min-h-[44px] w-11 h-11 flex items-center justify-center border-3 border-brutal-black dark:border-brutal-white bg-brutal-white dark:bg-brutal-dark-surface shadow-[var(--brutal-shadow-sm)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all cursor-pointer group"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Light mode" : "Dark mode"}
     >

@@ -34,7 +34,7 @@ export default function Footer() {
           <a
             href={`/${profile.cvFileName}`}
             download
-            className="inline-flex items-center gap-2 px-4 py-2 font-heading font-bold text-sm border-2 border-brutal-yellow text-brutal-yellow hover:bg-brutal-yellow hover:text-brutal-black transition-all"
+            className="min-h-[44px] inline-flex items-center gap-2 px-4 py-2.5 font-heading font-bold text-sm border-2 border-brutal-yellow text-brutal-yellow hover:bg-brutal-yellow hover:text-brutal-black transition-all"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
