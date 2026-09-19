@@ -95,8 +95,8 @@ const scheduleNextPoll = () => {
   // Stop polling completely if tab is hidden
   if (document.visibilityState !== "visible") return;
 
-  // Dynamic responsive interval: 4.5s while playing (fast pause detection), 8s while offline
-  const intervalMs = sharedTrack?.isPlaying ? 4500 : 8000;
+  // Fast polling every 2.5s
+  const intervalMs = 2500;
   pollTimer = setTimeout(executeFetch, intervalMs);
 };
 
