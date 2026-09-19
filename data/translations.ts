@@ -168,7 +168,6 @@ export const translations: Record<Language, TranslationDictionary> = {
       greeting: "👋 Hi, I am",
       roles: [
         "Fullstack Developer",
-        "Backend & Frontend Engineer",
         "Creative Coder",
         "Problem Solver",
       ],
@@ -499,7 +498,6 @@ export const translations: Record<Language, TranslationDictionary> = {
       greeting: "👋 Halo, saya",
       roles: [
         "Fullstack Developer",
-        "Backend & Frontend Engineer",
         "Creative Coder",
         "Pemecah Masalah",
       ],
