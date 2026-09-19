@@ -19,114 +19,144 @@ interface SpotifyWidgetProps {
 
 const CACHE_KEY = "portfolio_last_spotify_track";
 
+// Shared state manager across all widget instances (prevents duplicate fetches)
+type StateListener = (data: { track: SpotifyTrack | null; isLoading: boolean; error: boolean }) => void;
+
+let sharedTrack: SpotifyTrack | null = null;
+let sharedIsLoading = true;
+let sharedError = false;
+const listeners = new Set<StateListener>();
+let pollTimer: NodeJS.Timeout | null = null;
+let isFetching = false;
+
+const broadcast = () => {
+  listeners.forEach((listener) =>
+    listener({ track: sharedTrack, isLoading: sharedIsLoading, error: sharedError })
+  );
+};
+
+const executeFetch = async () => {
+  if (isFetching) return;
+  isFetching = true;
+
+  try {
+    const res = await fetch(`/api/spotify?t=${Date.now()}`, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+    });
+
+    if (res.ok) {
+      const data: SpotifyTrack = await res.json();
+      const serverTime = data.timestamp || 0;
+
+      let savedTrack: SpotifyTrack | null = null;
+      try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (raw) savedTrack = JSON.parse(raw);
+      } catch {}
+
+      if (data.isPlaying) {
+        // Live playback active
+        const toSave: SpotifyTrack = { ...data, timestamp: Date.now() };
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(toSave));
+        } catch {}
+        sharedTrack = data;
+      } else {
+        // Paused / offline: retain recently active track if newer than scrobble
+        if (savedTrack && (savedTrack.timestamp || 0) > serverTime) {
+          sharedTrack = { ...savedTrack, isPlaying: false };
+        } else {
+          const toSave: SpotifyTrack = { ...data, timestamp: serverTime || Date.now() };
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(toSave));
+          } catch {}
+          sharedTrack = data;
+        }
+      }
+      sharedError = false;
+    } else {
+      sharedError = true;
+    }
+  } catch {
+    sharedError = true;
+  } finally {
+    sharedIsLoading = false;
+    isFetching = false;
+    broadcast();
+    scheduleNextPoll();
+  }
+};
+
+const scheduleNextPoll = () => {
+  if (pollTimer) clearTimeout(pollTimer);
+  if (typeof document === "undefined" || listeners.size === 0) return;
+
+  // Stop polling completely if tab is hidden
+  if (document.visibilityState !== "visible") return;
+
+  // Dynamic responsive interval: 4.5s while playing (fast pause detection), 8s while offline
+  const intervalMs = sharedTrack?.isPlaying ? 4500 : 8000;
+  pollTimer = setTimeout(executeFetch, intervalMs);
+};
+
+const handleWindowActivity = () => {
+  if (typeof document !== "undefined" && document.visibilityState === "visible") {
+    // User returned to tab: fetch immediately
+    executeFetch();
+  } else {
+    // User left tab: stop polling
+    if (pollTimer) clearTimeout(pollTimer);
+  }
+};
+
 export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
   const { isEnglish } = useLanguage();
-  const [track, setTrack] = useState<SpotifyTrack | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  // 1. Immediately restore last known track from localStorage on mount (zero flicker on refresh)
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(CACHE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.name) {
-          setTrack({ ...parsed, isPlaying: false });
-          setIsLoading(false);
-        }
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchTrack = async () => {
+  const [state, setState] = useState<{
+    track: SpotifyTrack | null;
+    isLoading: boolean;
+    error: boolean;
+  }>(() => {
+    let initialTrack = sharedTrack;
+    if (!initialTrack && typeof window !== "undefined") {
       try {
-        const res = await fetch(`/api/spotify?t=${Date.now()}`, {
-          cache: "no-store",
-          headers: {
-            "Cache-Control": "no-cache",
-          },
-        });
-        if (res.ok) {
-          const data: SpotifyTrack = await res.json();
-          const serverTime = data.timestamp || 0;
-
-          // Retrieve client's saved track
-          let savedTrack: SpotifyTrack | null = null;
-          try {
-            const raw = localStorage.getItem(CACHE_KEY);
-            if (raw) savedTrack = JSON.parse(raw);
-          } catch {}
-
-          if (data.isPlaying) {
-            // Live playing: always update cache and show live state
-            const toSave: SpotifyTrack = { ...data, timestamp: Date.now() };
-            try {
-              localStorage.setItem(CACHE_KEY, JSON.stringify(toSave));
-            } catch {}
-            setTrack(data);
-          } else {
-            // Offline / Paused:
-            // If the user was playing a song more recently than the server's scrobble time, retain that paused song!
-            if (savedTrack && (savedTrack.timestamp || 0) > serverTime) {
-              setTrack({
-                ...savedTrack,
-                isPlaying: false,
-              });
-            } else {
-              // Server's scrobble is genuinely newer
-              const toSave: SpotifyTrack = { ...data, timestamp: serverTime || Date.now() };
-              try {
-                localStorage.setItem(CACHE_KEY, JSON.stringify(toSave));
-              } catch {}
-              setTrack(data);
-            }
+        const saved = localStorage.getItem(CACHE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.name) {
+            initialTrack = { ...parsed, isPlaying: false };
           }
-          setError(false);
-        } else {
-          setError(true);
         }
-      } catch {
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
+      } catch {}
+    }
+    return {
+      track: initialTrack,
+      isLoading: !initialTrack && sharedIsLoading,
+      error: sharedError,
     };
+  });
 
-    let lastFetchTime = Date.now();
-
-    fetchTrack();
-
-    // Polling every 30s (WCAG performance & resource optimized)
-    const interval = setInterval(() => {
-      if (typeof document !== "undefined" && document.visibilityState === "visible") {
-        lastFetchTime = Date.now();
-        fetchTrack();
-      }
-    }, 30000);
-
-    const handleVisibilityChange = () => {
-      // Only refetch if document became visible AND at least 20s elapsed since last fetch
-      if (
-        typeof document !== "undefined" &&
-        document.visibilityState === "visible" &&
-        Date.now() - lastFetchTime > 20000
-      ) {
-        lastFetchTime = Date.now();
-        fetchTrack();
-      }
+  useEffect(() => {
+    const listener: StateListener = (newState) => {
+      setState(newState);
     };
+    listeners.add(listener);
 
-    window.addEventListener("focus", handleVisibilityChange);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (listeners.size === 1) {
+      window.addEventListener("focus", handleWindowActivity);
+      document.addEventListener("visibilitychange", handleWindowActivity);
+      executeFetch();
+    } else {
+      listener({ track: sharedTrack, isLoading: sharedIsLoading, error: sharedError });
+    }
 
     return () => {
-      clearInterval(interval);
-      window.removeEventListener("focus", handleVisibilityChange);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      listeners.delete(listener);
+      if (listeners.size === 0) {
+        if (pollTimer) clearTimeout(pollTimer);
+        window.removeEventListener("focus", handleWindowActivity);
+        document.removeEventListener("visibilitychange", handleWindowActivity);
+      }
     };
   }, []);
 
@@ -140,8 +170,9 @@ export default function SpotifyWidget({ className = "" }: SpotifyWidgetProps) {
     isPlaying: false,
   };
 
-  const displayTrack = track || (error || !isLoading ? mockTrack : null);
+  const displayTrack = state.track || (state.error || !state.isLoading ? mockTrack : null);
   const isPlaying = displayTrack?.isPlaying || false;
+  const isLoading = state.isLoading;
 
   return (
     <div

@@ -63,9 +63,15 @@ async function getLastFmTrack(): Promise<TrackData | null> {
   try {
     const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(
       LASTFM_USERNAME
-    )}&api_key=${LASTFM_API_KEY}&format=json&limit=1`;
+    )}&api_key=${LASTFM_API_KEY}&format=json&limit=1&_t=${Date.now()}`;
 
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, {
+      cache: "no-store",
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+      },
+    });
     if (!res.ok) return null;
 
     const data = await res.json();
