@@ -5,15 +5,19 @@ export async function POST(req: Request) {
   try {
     const { name, email, message } = await req.json();
 
-    if (!name || !email || !message) {
+    const trimmedName = typeof name === "string" ? name.trim() : "";
+    const trimmedEmail = typeof email === "string" ? email.trim() : "";
+    const trimmedMessage = typeof message === "string" ? message.trim() : "";
+
+    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
       return NextResponse.json(
-        { error: "Nama, email, dan pesan wajib diisi." },
+        { error: "Nama, email, dan pesan wajib diisi dan tidak boleh kosong." },
         { status: 400 }
       );
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(trimmedEmail)) {
       return NextResponse.json(
         { error: "Format email tidak valid." },
         { status: 400 }
@@ -21,7 +25,7 @@ export async function POST(req: Request) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const recipientEmail = process.env.CONTACT_EMAIL;
+    const recipientEmail = process.env.CONTACT_EMAIL || "ahmadfahrezir@gmail.com";
 
     if (!apiKey) {
       console.warn("RESEND_API_KEY is not configured in .env.local");
@@ -29,16 +33,6 @@ export async function POST(req: Request) {
         {
           error:
             "Layanan email belum dikonfigurasi. Harap tambahkan RESEND_API_KEY di file .env.local",
-        },
-        { status: 503 }
-      );
-    }
-
-    if (!recipientEmail) {
-      return NextResponse.json(
-        {
-          error:
-            "Email penerima belum dikonfigurasi. Harap tambahkan CONTACT_EMAIL di file .env.local",
         },
         { status: 503 }
       );

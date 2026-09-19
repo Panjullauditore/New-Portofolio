@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Contact() {
-  const { t } = useLanguage();
+  const { t, isEnglish } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -26,14 +26,43 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMsg("");
+
+    // 1. Client-side input validation (ensure non-empty & valid email)
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+      setErrorMsg(
+        isEnglish
+          ? "Please fill in all fields (Name, Email, and Message)."
+          : "Mohon lengkapi semua bidang (Nama, Email, dan Pesan)."
+      );
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setErrorMsg(
+        isEnglish
+          ? "Please enter a valid email address."
+          : "Format email yang dimasukkan tidak valid."
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          message: trimmedMessage,
+        }),
       });
 
       const data = await res.json();
@@ -163,7 +192,7 @@ export default function Contact() {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} method="POST" className="space-y-4">
                   {errorMsg && (
                     <div className="p-3 border-2 border-brutal-red bg-brutal-red/10 text-brutal-red font-mono text-xs font-bold flex items-center gap-2">
                       <span>⚠️</span>
