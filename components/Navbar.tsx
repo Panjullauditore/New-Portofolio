@@ -22,7 +22,7 @@ export default function Navbar() {
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === "#") {
+    if (href === "#" || href === "/") {
       e.preventDefault();
       const heroElement = document.getElementById("hero") || document.documentElement;
       smoothScrollToSection(heroElement, 1.1);
@@ -66,8 +66,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a
-            href="#"
-            onClick={(e) => handleNavClick(e, "#")}
+            href="/"
+            onClick={(e) => handleNavClick(e, "/")}
             className="group flex items-center gap-2.5 cursor-pointer select-none"
             aria-label="Ahmad Fahrezi Portfolio"
           >

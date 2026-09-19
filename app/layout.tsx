@@ -5,6 +5,10 @@ import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ahmdfahrezi.vercel.app"),
+  alternates: {
+    canonical: "https://ahmdfahrezi.vercel.app",
+  },
   title: "Ahmad Fahrezi — Fullstack Developer | Portfolio",
   description:
     "Website portofolio pribadi Ahmad Fahrezi — Fullstack Developer. Lihat proyek, pengalaman, dan keahlian saya. Dibuat dengan gaya Neo Brutalism.",
@@ -25,7 +29,7 @@ export const metadata: Metadata = {
     title: "Ahmad Fahrezi — Fullstack Developer",
     description:
       "Website portofolio pribadi Ahmad Fahrezi — Fullstack Developer. Lihat proyek, pengalaman, dan keahlian.",
-    url: "https://ahmadfahrezi.dev",
+    url: "https://ahmdfahrezi.vercel.app",
     siteName: "Ahmad Fahrezi Portfolio",
     type: "website",
     locale: "id_ID",
